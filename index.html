@@ -14,12 +14,13 @@ body{margin:0;background:#0a0a13;color:var(--text);font-family:system-ui,-apple-
 .title{font-size:clamp(36px,6vw,64px);color:#fff;-webkit-text-stroke:3px var(--violet);margin:0}
 .subtitle{color:var(--muted);margin:4px 0 0}
 .container{max-width:1100px;margin:0 auto;padding:0 16px 64px}
-.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(290px,1fr));gap:16px}
-.card{background:var(--card);border:1px solid rgba(255,255,255,.06);border-radius:14px;padding:16px;position:relative;overflow:hidden}
-.card h3{margin:0 0 8px;font-size:20px}
-.meta{font-size:13px;color:var(--muted);margin-bottom:8px}
-.badges{display:flex;flex-wrap:wrap;gap:8px;margin:8px 0 12px}
-.badge{font-size:12px;border:1px solid rgba(255,255,255,.2);color:var(--muted);padding:2px 8px;border-radius:999px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:16px}
+.card{background:var(--card);border:1px solid rgba(255,255,255,.06);border-radius:14px;padding:12px 16px;position:relative;display:flex;align-items:center;gap:12px}
+.card img.thumb{width:60px;height:80px;object-fit:cover;border-radius:6px;flex-shrink:0}
+.card h3{margin:0 0 4px;font-size:18px}
+.meta{font-size:12px;color:var(--muted);margin-bottom:4px}
+.badges{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px}
+.badge{font-size:11px;border:1px solid rgba(255,255,255,.2);color:var(--muted);padding:2px 6px;border-radius:999px}
 .crown{position:absolute;top:10px;right:10px;width:28px;height:28px;background:none;border:none;cursor:pointer;opacity:.9}
 .crown .fill{fill:transparent;transition:fill .25s}
 .crown .stroke{stroke:#c9c9d9;stroke-width:2;fill:none}
@@ -40,7 +41,7 @@ hr.sep{border:0;border-top:1px solid rgba(255,255,255,.08);margin:18px 0}
 
 <header class="header">
   <div class="header-inner">
-    <!-- Dein Logo (falls du logo.png hochlädst) -->
+    <!-- Dein Logo -->
     <img src="logo.png" alt="Logo" class="logo" onerror="this.style.display='none'">
     <div>
       <h1 class="title">LuAnimeList</h1>
@@ -61,39 +62,39 @@ hr.sep{border:0;border-top:1px solid rgba(255,255,255,.08);margin:18px 0}
 <script>
 const COLORS={"Crunchyroll":"#ff8800","Netflix":"#e50914","Amazon Prime":"#1f6feb","Disney+":"#ff69b4","AniWorld":"#8a2be2"};
 
-/* ===== Datenbank – alphabetisch sortiert ===== */
+/* ===== Anime-Datenbank (alphabetisch mit Bildnamen) ===== */
 const DATA=[
-  {title:"Assassination Classroom",slug:"assassination-classroom",genres:["Action","Comedy","School"],trailer:"https://youtu.be/OzXYtOtYKoM",providers:[{name:"Netflix",url:"https://www.netflix.com/de/title/80045948?s=i&trkid=258593161&vlang=de"} ,{name:"AniWorld"}]},
-  {title:"Attack on Titan (Shingeki no Kyojin)",slug:"attack-on-titan",genres:["Action","Dark Fantasy"],trailer:"https://youtu.be/79oqWomZ6x4",providers:[{name:"AniWorld"}]},
-  {title:"Chainsaw Man",slug:"chainsaw-man",genres:["Action","Horror"],trailer:"https://youtu.be/H43cNX07HFQ",providers:[{name:"AniWorld"}]},
-  {title:"Charlotte",slug:"charlotte",genres:["Drama","Supernatural"],trailer:"https://youtu.be/QscDO21WMl0",providers:[{name:"AniWorld"}]},
-  {title:"Dan Da Dan",slug:"dan-da-dan",genres:["Action","Supernatural","Comedy"],trailer:"https://youtu.be/TEa98DnsSYY",providers:[{name:"Crunchyroll",url:"https://crunchyroll.com/series/GG5H5XQ0D/dan-da-dan"},{name:"Netflix",url:"https://www.netflix.com/de/title/81736884"} ,{name:"AniWorld"}]},
-  {title:"Demon Slayer",slug:"demon-slayer",genres:["Action","Dark Fantasy"],trailer:"https://youtu.be/s2BNK1uy42g",providers:[{name:"Crunchyroll",url:"https://crunchyroll.com/series/GY5P48XEY/demon-slayer-kimetsu-no-yaiba"}]},
-  {title:"Dr. STONE",slug:"dr-stone",genres:["Sci-Fi","Adventure"],trailer:"https://youtu.be/aqAw1rilA24",providers:[{name:"Crunchyroll",url:"https://crunchyroll.com/series/GYEXQKJG6/dr-stone"}]},
-  {title:"Elfen Lied",slug:"elfen-lied",genres:["Horror","Drama"],trailer:"https://youtu.be/wGeXsBWw4mM",providers:[{name:"AniWorld"}]},
-  {title:"Failure Frame",slug:"failure-frame",genres:["Isekai","Dark Fantasy"],trailer:"https://youtu.be/O5vpnueJWeI",providers:[{name:"Crunchyroll",url:"https://crunchyroll.com/series/G3KHEVD3E/failure-frame-i-became-the-strongest-and-annihilated-everything-with-low-level-spells"}]},
-  {title:"Gachiakuta",slug:"gachiakuta",genres:["Action","Mystery"],trailer:"https://youtu.be/vkT2Oz8GqNw",providers:[{name:"Crunchyroll",url:"https://crunchyroll.com/series/GP5HJ84P7/gachiakuta"}]},
-  {title:"Hell’s Paradise",slug:"hells-paradise",genres:["Action","Dark Fantasy"],trailer:"https://youtu.be/aoPX_cCfzXo",providers:[{name:"Crunchyroll",url:"https://crunchyroll.com/series/GJ0H7Q5ZJ/hells-paradise"},{name:"Netflix",url:"https://www.netflix.com/de/title/81574246"} ,{name:"AniWorld"}]},
-  {title:"Higurashi",slug:"higurashi",genres:["Horror","Mystery"],trailer:"https://youtu.be/7pz5iub3bug",providers:[{name:"AniWorld"}]},
-  {title:"Junji Ito Collection",slug:"junji-ito-collection",genres:["Horror"],trailer:"https://youtu.be/4OtHRdU5SPk",providers:[{name:"Crunchyroll",url:"https://crunchyroll.com/series/G68V4NDJ6/junji-ito-collection"} ,{name:"AniWorld"}]},
-  {title:"Lookism",slug:"lookism",genres:["Drama","School"],trailer:"https://youtu.be/c5smqeJ1Yxk",providers:[{name:"Netflix",url:"https://www.netflix.com/de/title/81177634"} ,{name:"AniWorld"}]},
-  {title:"Lord of Mysteries",slug:"lord-of-mysteries",genres:["Mystery","Fantasy"],trailer:"https://youtu.be/a8p-l75icsA",providers:[{name:"Crunchyroll",url:"https://crunchyroll.com/series/GEXH3W2EZ/lord-of-mysteries"} ,{name:"AniWorld"}]},
-  {title:"Masamune-kun’s Revenge",slug:"masamune-kuns-revenge",genres:["Romance","Comedy"],trailer:"https://youtu.be/V21sAf_UMMY",providers:[{name:"Crunchyroll",url:"https://crunchyroll.com/series/GYX02P3MR/masamune-kuns-revenge"}]},
-  {title:"Mashle",slug:"mashle",genres:["Action","Comedy","Fantasy"],trailer:"https://youtu.be/Y1HXrFvYwEI",providers:[{name:"Crunchyroll",url:"https://crunchyroll.com/series/GDKHZEP8W/mashle-magic-and-muscles"} ,{name:"AniWorld"}]},
-  {title:"Mushoku Tensei",slug:"mushoku-tensei",genres:["Isekai","Drama"],trailer:"https://youtu.be/OvWiug-AB8w",providers:[{name:"Crunchyroll",url:"https://crunchyroll.com/series/G24H1N3MP/mushoku-tensei-jobless-reincarnation"} ,{name:"AniWorld"}]},
-  {title:"My Hero Academia",slug:"my-hero-academia",genres:["Action","Superhero"],trailer:"https://youtu.be/diEMNV1tB2I",providers:[{name:"Crunchyroll",url:"https://crunchyroll.com/series/G6NQ5DWZ6/my-hero-academia"} ,{name:"AniWorld"}]},
-  {title:"Naruto Shippuden",slug:"naruto-shippuden",genres:["Action","Adventure"],trailer:"https://youtu.be/1GHJFYExsJU",providers:[{name:"Netflix",url:"https://www.netflix.com/de/title/80000603"} ,{name:"AniWorld"}]},
-  {title:"One Punch Man",slug:"one-punch-man",genres:["Action","Comedy"],trailer:"https://youtu.be/B_jg-uHObrI",providers:[{name:"AniWorld"}]},
-  {title:"Reborn as a Vending Machine",slug:"reborn-as-a-vending-machine",genres:["Comedy","Isekai"],trailer:"https://youtu.be/RVyhFZF5ius",providers:[{name:"Crunchyroll",url:"https://crunchyroll.com/series/GVDHX8504/reborn-as-a-vending-machine-i-now-wander-the-dungeon"}]},
-  {title:"Solo Leveling",slug:"solo-leveling",genres:["Action","Fantasy"],trailer:"https://youtu.be/x40O_l6Nk3U",providers:[{name:"Crunchyroll",url:"https://crunchyroll.com/series/GDKHZEJ0K/solo-leveling"} ,{name:"AniWorld"}]},
-  {title:"Sword Art Online",slug:"sword-art-online",genres:["Sci-Fi","Isekai"],trailer:"https://youtu.be/w8s65ioWIJQ",providers:[{name:"Crunchyroll",url:"https://crunchyroll.com/series/GR49G9VP6/sword-art-online"} ,{name:"AniWorld"}]},
-  {title:"The Seven Deadly Sins",slug:"the-seven-deadly-sins",genres:["Action","Fantasy"],trailer:"https://youtu.be/_erEYpW3L0E",providers:[{name:"AniWorld"}]},
-  {title:"The Seven Deadly Sins: Dragon’s Judgement",slug:"the-seven-deadly-sins-dragons-judgement",genres:["Action","Fantasy"],trailer:"https://youtu.be/0kgL6OKT5nw",providers:[{name:"Netflix",url:"https://www.netflix.com/de/title/80050063"}]},
-  {title:"The Seven Deadly Sins: Four Knights of the Apocalypse",slug:"the-seven-deadly-sins-four-knights-of-the-apocalypse",genres:["Action","Fantasy"],trailer:"https://youtu.be/kKRP8ATyq3k",providers:[{name:"Netflix",url:"https://www.netflix.com/de/title/81562396"}]},
-  {title:"Tokyo Ghoul",slug:"tokyo-ghoul",genres:["Horror","Dark Fantasy"],trailer:"https://youtu.be/BCP6n6bsPWw",providers:[{name:"Crunchyroll",url:"https://crunchyroll.com/series/G6NV7Z50Y/tokyo-ghoul"} ,{name:"AniWorld"}]},
-  {title:"Tokyo Revengers",slug:"tokyo-revengers",genres:["Action","Drama"],trailer:"https://youtu.be/fSHhNUmXMeA",providers:[{name:"Crunchyroll",url:"https://crunchyroll.com/series/G3KHEVMN1/tokyo-revengers"} ,{name:"AniWorld"}]},
-  {title:"Wind Breaker",slug:"wind-breaker",genres:["Action","School"],trailer:"https://youtu.be/Sdddy0LoTYI",providers:[{name:"Crunchyroll",url:"https://crunchyroll.com/series/G3KHEVDPE/wind-breaker"} ,{name:"AniWorld"}]},
-  {title:"You Are My Eternity",slug:"you-are-my-eternity",genres:["Drama","Fantasy"],trailer:"https://youtu.be/ueptsgaya_Q",providers:[{name:"Crunchyroll",url:"https://crunchyroll.com/series/GG5H5XMWV/to-your-eternity"}]}
+  {title:"Assassination Classroom",slug:"assassination-classroom",image:"images/assassination.jpg",genres:["Action","Comedy","School"],trailer:"https://youtu.be/OzXYtOtYKoM",providers:[{name:"Netflix",url:"https://www.netflix.com/de/title/80045948"} ,{name:"AniWorld"}]},
+  {title:"Attack on Titan",slug:"attack-on-titan",image:"images/aot.jpg",genres:["Action","Dark Fantasy"],trailer:"https://youtu.be/79oqWomZ6x4",providers:[{name:"AniWorld"}]},
+  {title:"Chainsaw Man",slug:"chainsaw-man",image:"images/chainsaw.jpg",genres:["Action","Horror"],trailer:"https://youtu.be/H43cNX07HFQ",providers:[{name:"AniWorld"}]},
+  {title:"Charlotte",slug:"charlotte",image:"images/charlotte.jpg",genres:["Drama","Supernatural"],trailer:"https://youtu.be/QscDO21WMl0",providers:[{name:"AniWorld"}]},
+  {title:"Dan Da Dan",slug:"dan-da-dan",image:"images/dandadan.jpg",genres:["Action","Supernatural"],trailer:"https://youtu.be/TEa98DnsSYY",providers:[{name:"Crunchyroll",url:"https://crunchyroll.com/series/GG5H5XQ0D/dan-da-dan"},{name:"Netflix",url:"https://www.netflix.com/de/title/81736884"} ,{name:"AniWorld"}]},
+  {title:"Demon Slayer",slug:"demon-slayer",image:"images/demonslayer.jpg",genres:["Action","Dark Fantasy"],trailer:"https://youtu.be/s2BNK1uy42g",providers:[{name:"Crunchyroll",url:"https://crunchyroll.com/series/GY5P48XEY/demon-slayer-kimetsu-no-yaiba"}]},
+  {title:"Dr. STONE",slug:"dr-stone",image:"images/drstone.jpg",genres:["Sci-Fi","Adventure"],trailer:"https://youtu.be/aqAw1rilA24",providers:[{name:"Crunchyroll",url:"https://crunchyroll.com/series/GYEXQKJG6/dr-stone"}]},
+  {title:"Elfen Lied",slug:"elfen-lied",image:"images/elfenlied.jpg",genres:["Horror","Drama"],trailer:"https://youtu.be/wGeXsBWw4mM",providers:[{name:"AniWorld"}]},
+  {title:"Failure Frame",slug:"failure-frame",image:"images/failure.jpg",genres:["Isekai","Dark Fantasy"],trailer:"https://youtu.be/O5vpnueJWeI",providers:[{name:"Crunchyroll",url:"https://crunchyroll.com/series/G3KHEVD3E/failure-frame"}]},
+  {title:"Gachiakuta",slug:"gachiakuta",image:"images/gachiakuta.jpg",genres:["Action","Mystery"],trailer:"https://youtu.be/vkT2Oz8GqNw",providers:[{name:"Crunchyroll",url:"https://crunchyroll.com/series/GP5HJ84P7/gachiakuta"}]},
+  {title:"Hell’s Paradise",slug:"hells-paradise",image:"images/hellsparadise.jpg",genres:["Action","Dark Fantasy"],trailer:"https://youtu.be/aoPX_cCfzXo",providers:[{name:"Crunchyroll",url:"https://crunchyroll.com/series/GJ0H7Q5ZJ/hells-paradise"},{name:"Netflix",url:"https://www.netflix.com/de/title/81574246"} ,{name:"AniWorld"}]},
+  {title:"Higurashi",slug:"higurashi",image:"images/higurashi.jpg",genres:["Horror","Mystery"],trailer:"https://youtu.be/7pz5iub3bug",providers:[{name:"AniWorld"}]},
+  {title:"Junji Ito Collection",slug:"junji-ito-collection",image:"images/junjiito.jpg",genres:["Horror"],trailer:"https://youtu.be/4OtHRdU5SPk",providers:[{name:"Crunchyroll",url:"https://crunchyroll.com/series/G68V4NDJ6/junji-ito-collection"} ,{name:"AniWorld"}]},
+  {title:"Lookism",slug:"lookism",image:"images/lookism.jpg",genres:["Drama","School"],trailer:"https://youtu.be/c5smqeJ1Yxk",providers:[{name:"Netflix",url:"https://www.netflix.com/de/title/81177634"} ,{name:"AniWorld"}]},
+  {title:"Lord of Mysteries",slug:"lord-of-mysteries",image:"images/lordofmysteries.jpg",genres:["Mystery","Fantasy"],trailer:"https://youtu.be/a8p-l75icsA",providers:[{name:"Crunchyroll",url:"https://crunchyroll.com/series/GEXH3W2EZ/lord-of-mysteries"} ,{name:"AniWorld"}]},
+  {title:"Masamune-kun’s Revenge",slug:"masamune-kuns-revenge",image:"images/masamune.jpg",genres:["Romance","Comedy"],trailer:"https://youtu.be/V21sAf_UMMY",providers:[{name:"Crunchyroll",url:"https://crunchyroll.com/series/GYX02P3MR/masamune-kuns-revenge"}]},
+  {title:"Mashle",slug:"mashle",image:"images/mashle.jpg",genres:["Action","Comedy","Fantasy"],trailer:"https://youtu.be/Y1HXrFvYwEI",providers:[{name:"Crunchyroll",url:"https://crunchyroll.com/series/GDKHZEP8W/mashle-magic-and-muscles"} ,{name:"AniWorld"}]},
+  {title:"Mushoku Tensei",slug:"mushoku-tensei",image:"images/mushoku.jpg",genres:["Isekai","Drama"],trailer:"https://youtu.be/OvWiug-AB8w",providers:[{name:"Crunchyroll",url:"https://crunchyroll.com/series/G24H1N3MP/mushoku-tensei-jobless-reincarnation"} ,{name:"AniWorld"}]},
+  {title:"My Hero Academia",slug:"my-hero-academia",image:"images/mha.jpg",genres:["Action","Superhero"],trailer:"https://youtu.be/diEMNV1tB2I",providers:[{name:"Crunchyroll",url:"https://crunchyroll.com/series/G6NQ5DWZ6/my-hero-academia"} ,{name:"AniWorld"}]},
+  {title:"Naruto Shippuden",slug:"naruto-shippuden",image:"images/naruto.jpg",genres:["Action","Adventure"],trailer:"https://youtu.be/1GHJFYExsJU",providers:[{name:"Netflix",url:"https://www.netflix.com/de/title/80000603"} ,{name:"AniWorld"}]},
+  {title:"One Punch Man",slug:"one-punch-man",image:"images/opm.jpg",genres:["Action","Comedy"],trailer:"https://youtu.be/B_jg-uHObrI",providers:[{name:"AniWorld"}]},
+  {title:"Reborn as a Vending Machine",slug:"reborn-vending",image:"images/vending.jpg",genres:["Comedy","Isekai"],trailer:"https://youtu.be/RVyhFZF5ius",providers:[{name:"Crunchyroll",url:"https://crunchyroll.com/series/GVDHX8504/reborn-as-a-vending-machine-i-now-wander-the-dungeon"}]},
+  {title:"Solo Leveling",slug:"solo-leveling",image:"images/sololeveling.jpg",genres:["Action","Fantasy"],trailer:"https://youtu.be/x40O_l6Nk3U",providers:[{name:"Crunchyroll",url:"https://crunchyroll.com/series/GDKHZEJ0K/solo-leveling"} ,{name:"AniWorld"}]},
+  {title:"Sword Art Online",slug:"sao",image:"images/sao.jpg",genres:["Sci-Fi","Isekai"],trailer:"https://youtu.be/w8s65ioWIJQ",providers:[{name:"Crunchyroll",url:"https://crunchyroll.com/series/GR49G9VP6/sword-art-online"} ,{name:"AniWorld"}]},
+  {title:"The Seven Deadly Sins",slug:"seven-deadly-sins",image:"images/7ds.jpg",genres:["Action","Fantasy"],trailer:"https://youtu.be/_erEYpW3L0E",providers:[{name:"AniWorld"}]},
+  {title:"The Seven Deadly Sins: Dragon’s Judgement",slug:"7ds-judgement",image:"images/7dsdj.jpg",genres:["Action","Fantasy"],trailer:"https://youtu.be/0kgL6OKT5nw",providers:[{name:"Netflix",url:"https://www.netflix.com/de/title/80050063"}]},
+  {title:"The Seven Deadly Sins: Four Knights of the Apocalypse",slug:"7ds-four-knights",image:"images/7ds4k.jpg",genres:["Action","Fantasy"],trailer:"https://youtu.be/kKRP8ATyq3k",providers:[{name:"Netflix",url:"https://www.netflix.com/de/title/81562396"}]},
+  {title:"Tokyo Ghoul",slug:"tokyo-ghoul",image:"images/tokyoghoul.jpg",genres:["Horror","Dark Fantasy"],trailer:"https://youtu.be/BCP6n6bsPWw",providers:[{name:"Crunchyroll",url:"https://crunchyroll.com/series/G6NV7Z50Y/tokyo-ghoul"} ,{name:"AniWorld"}]},
+  {title:"Tokyo Revengers",slug:"tokyo-revengers",image:"images/tokyorev.jpg",genres:["Action","Drama"],trailer:"https://youtu.be/fSHhNUmXMeA",providers:[{name:"Crunchyroll",url:"https://crunchyroll.com/series/G3KHEVMN1/tokyo-revengers"} ,{name:"AniWorld"}]},
+  {title:"Wind Breaker",slug:"wind-breaker",image:"images/windbreaker.jpg",genres:["Action","School"],trailer:"https://youtu.be/Sdddy0LoTYI",providers:[{name:"Crunchyroll",url:"https://crunchyroll.com/series/G3KHEVDPE/wind-breaker"} ,{name:"AniWorld"}]},
+  {title:"You Are My Eternity",slug:"you-are-my-eternity",image:"images/eternity.jpg",genres:["Drama","Fantasy"],trailer:"https://youtu.be/ueptsgaya_Q",providers:[{name:"Crunchyroll",url:"https://crunchyroll.com/series/GG5H5XMWV/to-your-eternity"}]}
 ];
 
 /* ===== Router ===== */
@@ -111,13 +112,40 @@ function ytEmbed(url){if(!url) return "";const m=url.match(/youtu\.be\/([A-Za-z0
 function btn(p){if(p.name==="AniWorld"){return `<button class="btn" style="--c:${COLORS["AniWorld"]}" onclick="openPopup()">AniWorld ❗</button>`;}return `<a class="btn" style="--c:${COLORS[p.name]||'#444'}" href="${p.url}" target="_blank">${p.name}</a>`;}
 
 /* ===== Index ===== */
-function renderIndex(){const cards=DATA.map(a=>{const badges=a.genres.map(g=>`<span class="badge">${g}</span>`).join("");return `<div class="card"><div class="confetti"></div><button class="crown"><svg viewBox="0 0 24 24"><path class="fill" d="M3 19h18v2H3zM5 9l4 3 3-6 3 6 4-3 1 8H4z"/><path class="stroke" d="M4 17h16l-1-8-4 3-3-6-3 6-4-3z"/></svg></button><h3><a href="?slug=${encodeURIComponent(a.slug)}">${a.title}</a></h3><div class="meta">${a.genres.join(", ")}</div><div class="badges">${badges}</div></div>`;}).join("");document.getElementById("app").innerHTML=`<div class="grid">${cards}</div>`;setupCrowns();}
+function renderIndex(){
+  const cards=DATA.map(a=>{
+    const badges=a.genres.map(g=>`<span class="badge">${g}</span>`).join("");
+    return `<div class="card"><div class="confetti"></div>
+      <button class="crown"><svg viewBox="0 0 24 24"><path class="fill" d="M3 19h18v2H3zM5 9l4 3 3-6 3 6 4-3 1 8H4z"/><path class="stroke" d="M4 17h16l-1-8-4 3-3-6-3 6-4-3z"/></svg></button>
+      <img class="thumb" src="${a.image}" alt="${a.title}" onerror="this.style.display='none'">
+      <div><h3><a href="?slug=${encodeURIComponent(a.slug)}">${a.title}</a></h3><div class="meta">${a.genres.join(", ")}</div><div class="badges">${badges}</div></div>
+    </div>`;
+  }).join("");
+  document.getElementById("app").innerHTML=`<div class="grid">${cards}</div>`;
+  setupCrowns();
+}
 
 /* ===== Detail ===== */
-function renderDetail(slug){const a=DATA.find(x=>x.slug===slug);if(!a){renderIndex();return;}const trailer=ytEmbed(a.trailer);const links=(a.providers||[]).map(btn).join("");const html=`<div class="card"><h2>${a.title}</h2><div class="meta">Genres: ${a.genres.join(", ")}</div>${trailer?`<hr class="sep"><div>${trailer}</div>`:""}${links?`<hr class="sep"><div>${links}</div>`:""}<hr class="sep"><div><a href="index.html">← Zurück</a></div></div>`;document.getElementById("app").innerHTML=html;}
+function renderDetail(slug){
+  const a=DATA.find(x=>x.slug===slug);
+  if(!a){renderIndex();return;}
+  const trailer=ytEmbed(a.trailer);
+  const links=(a.providers||[]).map(btn).join("");
+  const html=`<div class="card" style="flex-direction:column;align-items:flex-start">
+    <h2>${a.title}</h2>
+    <div class="meta">Genres: ${a.genres.join(", ")}</div>
+    ${trailer?`<hr class="sep"><div>${trailer}</div>`:""}
+    ${links?`<hr class="sep"><div>${links}</div>`:""}
+    <hr class="sep"><div><a href="index.html">← Zurück</a></div>
+  </div>`;
+  document.getElementById("app").innerHTML=html;
+}
 
 /* ===== Init ===== */
-document.addEventListener("DOMContentLoaded",()=>{const slug=getSlug();slug?renderDetail(slug):renderIndex();});
+document.addEventListener("DOMContentLoaded",()=>{
+  const slug=getSlug();
+  slug?renderDetail(slug):renderIndex();
+});
 
 /* ===== Popup ===== */
 function openPopup(){document.getElementById("popup").style.display="flex";}
