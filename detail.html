@@ -1,41 +1,167 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="de">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Anime – Details</title>
-  <link rel="stylesheet" href="styles/style.css">
-  <meta name="description" content="Details zum ausgewählten Anime: Beschreibung, Sprache, Link zum Stream.">
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Details • LuAnimeList</title>
+  <style>
+:root{
+  --bg:#0b0b12;
+  --card:#141424;
+  --text:#ffffff;
+  --muted:#b6b6c9;
+  --violet:#8a2be2;
+}
+*{box-sizing:border-box}
+body{
+  margin:0;
+  background:linear-gradient(180deg,#0a0a13 0%, #0e0e1a 100%);
+  color:var(--text);
+  font-family: system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial, "Noto Sans", "Apple Color Emoji", "Segoe UI Emoji";
+  line-height:1.5;
+}
+.header{padding:32px 16px 8px; text-align:center}
+.title{
+  font-size: clamp(36px, 6vw, 64px);
+  color:#fff; /* fill */
+  -webkit-text-stroke: 3px var(--violet); /* violet outline */
+  text-stroke: 3px var(--violet);
+  letter-spacing:2px;
+  margin:0 0 6px 0;
+}
+.subtitle{color:var(--muted); margin:0 0 24px}
+.container{max-width:1100px; margin:0 auto; padding: 0 16px 64px}
+.grid{display:grid; grid-template-columns: repeat(auto-fill, minmax(290px,1fr)); gap:16px}
+.card{
+  background:var(--card);
+  border:1px solid rgba(255,255,255,0.06);
+  border-radius:14px; padding:16px; position:relative; overflow:hidden;
+}
+.card h3{margin:0 0 8px; font-size:20px}
+.meta{font-size:13px; color:var(--muted); margin-bottom:8px}
+.badges{display:flex; flex-wrap:wrap; gap:8px; margin:8px 0 12px}
+.badge{font-size:12px; border:1px solid rgba(255,255,255,0.2); color:var(--muted); padding:2px 8px; border-radius:999px}
+.btns{display:flex; flex-wrap:wrap; gap:8px}
+.btn{
+  --c:#444;
+  background:var(--c); color:white; border:none; border-radius:10px;
+  padding:10px 12px; font-weight:600; font-size:13px; cursor:pointer; text-decoration:none;
+  display:inline-flex; align-items:center; gap:8px; transition: transform .1s ease, filter .2s ease;
+}
+.btn:hover{ transform: translateY(-1px); filter:brightness(1.08)}
+.btn:active{ transform: translateY(0) scale(.98) }
+.btn .dot{ width:8px; height:8px; border-radius:50%; background:#fff }
+.btn.disabled{ filter:grayscale(0.4) brightness(0.7); cursor:not-allowed }
+
+.card .crown{ position:absolute; top:10px; right:10px; width:28px; height:28px; cursor:pointer; opacity:.9; background:none; border:none; padding:0 }
+.crown svg{ width:28px; height:28px; display:block }
+.crown .fill{ fill: transparent; transition: fill .25s ease }
+.crown .stroke{ stroke: #c9c9d9; stroke-width: 2; fill:none }
+.crown.active .fill{ fill: #ffd54a } /* turns colored when active */
+.crown.active .stroke{ stroke: #ffbf00 }
+
+/* Confetti */
+.confetti{ position:absolute; pointer-events:none; inset:0 }
+.confetti i{ position:absolute; width:8px; height:8px; opacity:0; transform: translateY(0) rotate(0); animation: fall 2s ease-out forwards }
+@keyframes fall{
+  0%{opacity:1; transform: translateY(-10px) rotate(0deg)}
+  100%{opacity:0; transform: translateY(60px) rotate(360deg)}
+}
+
+.footer{ color:var(--muted); text-align:center; padding:24px 12px; font-size:12px}
+a.titlelink{ color:inherit; text-decoration:none }
+a.titlelink:hover{ text-decoration:underline }
+.notice{ color:#ffc277; font-size:12px; margin:16px 0 4px }
+</style>
 </head>
 <body>
+  <header class="header">
+    <h1 class="title">LuAnimeList</h1>
+    <p class="subtitle"><a class="titlelink" href="index.html">← Zurück zur Übersicht</a></p>
+  </header>
+
   <div class="container">
-    <div class="header">
-      <h1 id="title">Anime</h1>
-      <div>
-        <a class="button" href="index.html">← Zurück zur Liste</a>
-      </div>
-    </div>
-
-    <div id="content" class="card detail">
-      <div id="trailer" class="video" style="display:none;"></div>
-      <div id="extraLinks" class="links" style="display:none;"></div>
-      <div class="row">
-        <div class="col">
-          <h2>Beschreibung</h2>
-          <p id="description">–</p>
-        </div>
-        <div class="col">
-          <h2>Infos</h2>
-          <p><strong>Sprache:</strong> <span class="badge" id="language">–</span></p>
-          <p><strong>Streaming-Link:</strong> <span id="linkWrap">–</span></p>
-        </div>
-      </div>
-    </div>
-
-    <div class="footer">
-      Fehlt etwas? Öffne die Datei <code>data/anime.json</code> und ergänze Sprache oder Link.
+    <div id="detail" class="card">
+      <h3 id="title">Titel</h3>
+      <div class="meta" id="genres"></div>
+      <p>Beschreibung: <em>kommt bald.</em></p>
+      <div id="trailerWrap"></div>
+      <div class="btns" id="providers" style="margin-top:12px"></div>
     </div>
   </div>
-  <script src="scripts/detail.js" defer></script>
+
+  <footer class="footer">© LuAnimeList</footer>
+
+  <script src="data.js"></script>
+  <script>
+const PROVIDER_COLOR = {
+  "Crunchyroll":"#ff8800",
+  "Amazon Prime":"#1f6feb",
+  "Disney+":"#ff69b4",
+  "Netflix":"#e50914",
+  "AniWorld":"#8a2be2"
+};
+function dot(){ return '<span class="dot"></span>' }
+
+function confettiBurst(root, x, y){
+  const colors = ['#ffd54a','#ff7a7a','#7ae0ff','#9d7aff','#7aff9a','#ff7ae1'];
+  for(let i=0;i<60;i++){
+    const p=document.createElement('i');
+    p.style.left=(x + (Math.random()*40-20))+'px';
+    p.style.top=(y + (Math.random()*20-10))+'px';
+    p.style.background = colors[Math.floor(Math.random()*colors.length)];
+    p.style.transform = `translateY(${Math.random()*-20}px) rotate(${Math.random()*180}deg)`;
+    p.style.animationDelay = (Math.random()*0.2)+'s';
+    p.style.borderRadius = Math.random()>.5?'50%':'2px';
+    root.appendChild(p);
+    setTimeout(()=>p.remove(),2100);
+  }
+}
+function setupCrowns(){
+  document.querySelectorAll('.crown').forEach(c=>{
+    c.addEventListener('click', (e)=>{
+      c.classList.toggle('active');
+      const rect = c.getBoundingClientRect();
+      const root = c.closest('.card');
+      const overlay = root.querySelector('.confetti');
+      overlay && confettiBurst(overlay, rect.left - root.getBoundingClientRect().left + 14, rect.top - root.getBoundingClientRect().top + 14);
+    });
+  });
+}
+document.addEventListener('DOMContentLoaded', setupCrowns);
+
+    function getParam(name){
+      const url = new URL(window.location.href);
+      return url.searchParams.get(name) || "";
+    }
+    function btn(p){
+      const color = PROVIDER_COLOR[p.name] || "#444";
+      const safe = p.name !== "AniWorld" && p.url;
+      const href = safe ? `href="${p.url}" target="_blank" rel="noopener"` : "";
+      const cls = safe ? "btn" : "btn disabled";
+      const title = safe ? p.name : p.name + " (kein Link)";
+      return `<a class="${cls}" style="--c:${color}" ${href}>${dot()}${title}</a>`;
+    }
+    function embedTrailer(url){
+      // convert youtu.be or youtube URL to nocookie embed
+      try{
+        const m = url.match(/youtu\.be\/(.+?)(\?|$)/) || url.match(/v=([^&]+)/);
+        const id = m ? m[1] : "";
+        if(!id) return "";
+        const src = "https://www.youtube-nocookie.com/embed/" + id;
+        return `<div class='card' style='margin-top:16px'><iframe width='100%' height='360' src='${src}' title='YouTube Trailer' frameborder='0' allow='accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share' referrerpolicy='strict-origin-when-cross-origin' allowfullscreen></iframe></div>`;
+      }catch(e){return ""}
+    }
+    function render(){
+      const slug = getParam('slug');
+      const a = window.LU_ANIME_DATA.find(x=>x.slug===slug);
+      if(!a) return;
+      document.getElementById('title').textContent = a.title;
+      document.getElementById('genres').textContent = "Genres: " + a.genres.join(", ");
+      document.getElementById('providers').innerHTML = a.providers.map(btn).join("") + (a.trailer?`<a class="btn" style="--c:#444" href="${a.trailer}" target="_blank" rel="noopener">${dot()}Trailer</a>`:"");
+      document.getElementById('trailerWrap').innerHTML = a.trailer ? embedTrailer(a.trailer) : "";
+    }
+    document.addEventListener('DOMContentLoaded', render);
+  </script>
 </body>
 </html>
