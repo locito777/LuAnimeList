@@ -92,25 +92,73 @@
   const sortRating = document.getElementById('sortRating');
 
   function rowTemplate(item) {
-    const title = item.title;
-    const rating = ratings[title] || 0;
-    const starsHtml = '★'.repeat(5).split('').map((s,i)=>`<span class="${i < rating ? 'active':''}">★</span>`).join('');
-    return `
-      <div class="row">
-        <img src="${item.image}" alt="Bild">
-        <div class="info">
-          <div class="title">${title}</div>
-          <div class="stars" data-title="${title}">${starsHtml}</div>
-          <div class="confirm-box">
-            Bewertung speichern?
-            <button class="yes">Bestätigen</button>
-            <button class="no">Abbrechen</button>
-          </div>
-          <div class="rating-text">${rating ? `Deine Bewertung: ${'★'.repeat(rating)} (${rating}/5)` : 'Noch nicht bewertet'}</div>
+  const title = item.title;
+  const rating = ratings[title] || 0;
+  const starsHtml = '★'.repeat(5).split('').map((s,i)=>
+    `<span class="${i < rating ? 'active':''}" data-value="${i+1}">★</span>`).join('');
+
+  return `
+    <div class="row">
+      <img src="${item.image}" alt="Bild">
+      <div class="info">
+        <div class="title">${title}</div>
+        <div class="stars" data-title="${title}">
+          ${starsHtml}
+        </div>
+        <div class="confirm-box" style="display:none;">
+          Bewertung speichern?<br>
+          <button class="yes">Bestätigen</button>
+          <button class="no">Abbrechen</button>
         </div>
       </div>
-    `;
-  }
+      <div class="rating-text">
+        ${rating ? `Deine Bewertung: ${'★'.repeat(rating)} (${rating}/5)` : 'Noch nicht bewertet'}
+      </div>
+    </div>
+  `;
+}
+
+function bindRowHandlers() {
+  document.querySelectorAll('.stars span').forEach(star => {
+    star.addEventListener('click', () => {
+      const stars = star.parentElement.querySelectorAll('span');
+      const value = parseInt(star.dataset.value);
+      stars.forEach((s,i) => s.classList.toggle('active', i < value));
+
+      const box = star.parentElement.parentElement.querySelector('.confirm-box');
+      box.style.display = 'block';
+      box.dataset.value = value;
+    });
+  });
+
+  document.querySelectorAll('.confirm-box .yes').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const box = btn.parentElement;
+      const value = parseInt(box.dataset.value);
+      const title = box.parentElement.querySelector('.title').textContent;
+
+      ratings[title] = value;
+      localStorage.setItem('ratings', JSON.stringify(ratings));
+      render(current);
+    });
+  });
+
+  document.querySelectorAll('.confirm-box .no').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const box = btn.parentElement;
+      box.style.display = 'none';
+      render(current);
+    });
+  });
+}
+
+function render(listData) {
+  list.innerHTML = listData.map(rowTemplate).join('');
+  bindRowHandlers();
+}
+
+// Initial Render
+render(current);
 
   function render(listData) {
     list.innerHTML = listData.map(rowTemplate).join('');
