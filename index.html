@@ -120,18 +120,6 @@
   `;
 }
 
-function bindRowHandlers() {
-  document.querySelectorAll('.stars span').forEach(star => {
-    star.addEventListener('click', () => {
-      const stars = star.parentElement.querySelectorAll('span');
-      const value = parseInt(star.dataset.value);
-      stars.forEach((s,i) => s.classList.toggle('active', i < value));
-
-      const box = star.parentElement.parentElement.querySelector('.confirm-box');
-      box.style.display = 'block';
-      box.dataset.value = value;
-    });
-  });
 
   document.querySelectorAll('.confirm-box .yes').forEach(btn => {
     btn.addEventListener('click', () => {
