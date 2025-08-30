@@ -1,148 +1,87 @@
-
 <!DOCTYPE html>
 <html lang="de">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <title>Meine Anime – Offline Webseite</title>
-  <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Meine Anime Liste</title>
   <style>
-    :root { --bg:#0f172a; --card:#1e293b; --fg:#f1f5f9; --muted:#cbd5e1; --accent:#facc15; }
-    * { box-sizing:border-box; }
-    body { margin:0; background:var(--bg); color:var(--fg); font-family:-apple-system, system-ui, Segoe UI, Roboto, sans-serif; }
-    header { position:sticky; top:0; z-index:2; backdrop-filter:saturate(160%) blur(8px); background:rgba(15,23,42,.7); padding:14px 16px; border-bottom:1px solid #0b1220; }
-    h1 { margin:0; font-size:20px; }
-    .container { max-width:900px; margin:16px auto; padding:0 12px; }
-    .toolbar { display:flex; gap:10px; align-items:center; margin-bottom:12px; flex-wrap:wrap; }
-    .search { flex:1 1 220px; }
-    .search input { width:100%; padding:10px 12px; border-radius:10px; border:1px solid #334155; background:#0b1220; color:var(--fg); }
-    .btn { padding:10px 12px; border-radius:10px; border:1px solid #334155; background:#0b1220; color:var(--fg); cursor:pointer; }
-    .list { display:flex; flex-direction:column; gap:12px; }
-    .row { display:flex; align-items:center; background:var(--card); border-radius:12px; overflow:hidden; }
-    .row img { width:80px; height:120px; object-fit:cover; background:#111827; flex-shrink:0; }
-    .info { flex:1; padding:12px; }
-    .title { font-weight:700; margin-bottom:6px; }
-    .stars span { font-size:24px; cursor:pointer; color:#475569; -webkit-tap-highlight-color: transparent; }
-    .stars span.active { color:var(--accent); }
-    .confirm-box { display:none; background:#0b1220; padding:10px; margin-top:6px; border:1px solid #334155; border-radius:8px; }
-    .confirm-box button { margin-right:8px; padding:8px 12px; border:none; border-radius:8px; cursor:pointer; font-weight:600; }
-    .yes { background:#22c55e; color:white; }
-    .no { background:#ef4444; color:white; }
-    .rating-text { font-size:13px; margin-top:6px; color:var(--muted); }
-    footer { color:var(--muted); font-size:12px; margin:18px 0; }
+    body {
+      background-color: #0f172a;
+      color: white;
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 20px;
+    }
+
+    h1 {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    .card {
+      background-color: #1e293b;
+      border-radius: 10px;
+      padding: 15px;
+      margin: 15px 0;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+    }
+
+    .card img {
+      width: 100%;
+      max-width: 300px;
+      border-radius: 8px;
+      display: block;
+      margin-bottom: 10px;
+    }
+
+    .card iframe {
+      width: 100%;
+      max-width: 400px;
+      height: 220px;
+      border-radius: 8px;
+      margin-top: 10px;
+    }
+
+    .card a {
+      color: #38bdf8;
+      text-decoration: none;
+      font-weight: bold;
+    }
+
+    .card a:hover {
+      text-decoration: underline;
+    }
+
+    .watched {
+      display: inline-block;
+      margin-top: 10px;
+      font-weight: bold;
+      color: #22c55e;
+    }
   </style>
 </head>
 <body>
-  <header>
-    <h1>📺 Meine Anime</h1>
-  </header>
-  <div class="container">
-    <div class="toolbar">
-      <div class="search"><input id="q" placeholder="Suchen (Titel) …" autocomplete="off"></div>
-      <button id="sortAZ" class="btn">A–Z</button>
-      <button id="sortRating" class="btn">Beste zuerst</button>
-    </div>
-    <div id="list" class="list"></div>
-    <footer>
-      Tipp: Öffne diese Datei über den <b>Teilen-Button</b> in <b>Safari</b> und
-      wähle „Zum Home-Bildschirm“, dann hast du sie wie eine richtige App.
-    </footer>
+  <h1>📺 Meine geschauten Anime</h1>
+
+  <!-- Anime Karte -->
+  <div class="card">
+    <h2>Assassination Classroom</h2>
+    <img src="assassination.jpg" alt="Assassination Classroom">
+    <p>Eine Gruppe Schüler muss ihren Alien-Lehrer töten, bevor er die Erde zerstört.</p>
+    <iframe src="https://www.youtube.com/embed/2LzWb3pqAYI" frameborder="0" allowfullscreen></iframe>
+    <p><a href="https://aniworld.to/anime/stream/assassination-classroom">Hier auf Deutsch schauen</a></p>
+    <span class="watched">Deutsch geschaut ✅</span>
   </div>
-<script>
-  const DATA = [
-  {
-    "title": "Assassination Classroom",
-    "image": "assassination.jpg"
-  },
-  {
-    "title": "The Seven Deadly Sins",
-    "image": "seven-deadly-sins.jpg",
-    "description": "Eine Gruppe von legendären Rittern kämpft gegen das Böse im Königreich Britannia.",
-    "trailer": "https://www.youtube.com/embed/wxcvbL6o55M",
-    "link": "https://aniworld.to/anime/stream/the-seven-deadly-sins",
-    "watched": "Deutsch geschaut"
-  }
-];
-  let ratings = JSON.parse(localStorage.getItem('ratings') || '{}');
-  let current = [...DATA];
 
-  const list = document.getElementById('list');
-  const q = document.getElementById('q');
-  const sortAZ = document.getElementById('sortAZ');
-  const sortRating = document.getElementById('sortRating');
+  <!-- Beispiel zweite Karte -->
+  <div class="card">
+    <h2>The Seven Deadly Sins</h2>
+    <img src="seven-deadly-sins.jpg" alt="The Seven Deadly Sins">
+    <p>Eine Gruppe von legendären Rittern kämpft gegen das Königreich und dunkle Mächte.</p>
+    <iframe src="https://www.youtube.com/embed/wxcvbL6o55M" frameborder="0" allowfullscreen></iframe>
+    <p><a href="https://aniworld.to/anime/stream/the-seven-deadly-sins">Hier auf Deutsch schauen</a></p>
+    <span class="watched">Deutsch geschaut ✅</span>
+  </div>
 
-  function rowTemplate(item) {
-    const title = item.title;
-    const rating = ratings[title] || 0;
-    const starsHtml = '★'.repeat(5).split('').map((s,i)=>`<span class="${i < rating ? 'active':''}">★</span>`).join('');
-    return `
-      <div class="row">
-        <img src="${item.image}" alt="Bild">
-        <div class="info">
-          <div class="title">${title}</div>
-          <div class="stars" data-title="${title}">${starsHtml}</div>
-          <div class="confirm-box">
-            Bewertung speichern?
-            <button class="yes">Bestätigen</button>
-            <button class="no">Abbrechen</button>
-          </div>
-          <div class="rating-text">${rating ? `Deine Bewertung: ${'★'.repeat(rating)} (${rating}/5)` : 'Noch nicht bewertet'}</div>
-        </div>
-      </div>
-    `;
-  }
-
-  function render(listData) {
-    list.innerHTML = listData.map(rowTemplate).join('');
-    bindRowHandlers();
-  }
-
-  function bindRowHandlers() {
-    document.querySelectorAll('.row').forEach(row => {
-      const stars = row.querySelectorAll('.stars span');
-      const confirmBox = row.querySelector('.confirm-box');
-      const title = row.querySelector('.stars').dataset.title;
-      let pending = 0;
-
-      stars.forEach((star, i) => {
-        star.addEventListener('click', () => {
-          pending = i+1;
-          confirmBox.style.display = 'block';
-        }, {passive:true});
-      });
-
-      row.querySelector('.yes').addEventListener('click', () => {
-        ratings[title] = pending;
-        localStorage.setItem('ratings', JSON.stringify(ratings));
-        confirmBox.style.display = 'none';
-        render(current);
-      });
-
-      row.querySelector('.no').addEventListener('click', () => {
-        confirmBox.style.display = 'none';
-      });
-    });
-  }
-
-  q.addEventListener('input', () => {
-    const term = q.value.toLowerCase().trim();
-    current = DATA.filter(x => x.title.toLowerCase().includes(term));
-    render(current);
-  });
-
-  sortAZ.addEventListener('click', () => {
-    current.sort((a,b)=> a.title.localeCompare(b.title));
-    render(current);
-  });
-
-  sortRating.addEventListener('click', () => {
-    current.sort((a,b)=> (ratings[b.title]||0) - (ratings[a.title]||0) || a.title.localeCompare(b.title));
-    render(current);
-  });
-
-  // Initial render
-  render(current);
-</script>
 </body>
 </html>
