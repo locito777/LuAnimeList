@@ -1,121 +1,427 @@
 <!DOCTYPE html>
 <html lang="de">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Meine Anime Seite</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>LuAnimeList</title>
   <style>
-    body {
-      font-family: Arial, sans-serif;
-      background: #1c1c1c;
-      color: #fff;
-      margin: 0;
-      padding: 0;
-    }
+:root{
+  --bg:#0b0b12;
+  --card:#141424;
+  --text:#ffffff;
+  --muted:#b6b6c9;
+  --violet:#8a2be2;
+}
+*{box-sizing:border-box}
+body{
+  margin:0;
+  background:linear-gradient(180deg,#0a0a13 0%, #0e0e1a 100%);
+  color:var(--text);
+  font-family: system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial, "Noto Sans", "Apple Color Emoji", "Segoe UI Emoji";
+  line-height:1.5;
+}
+.header{padding:32px 16px 8px; text-align:center}
+.title{
+  font-size: clamp(36px, 6vw, 64px);
+  color:#fff; /* fill */
+  -webkit-text-stroke: 3px var(--violet); /* violet outline */
+  text-stroke: 3px var(--violet);
+  letter-spacing:2px;
+  margin:0 0 6px 0;
+}
+.subtitle{color:var(--muted); margin:0 0 24px}
+.container{max-width:1100px; margin:0 auto; padding: 0 16px 64px}
+.grid{display:grid; grid-template-columns: repeat(auto-fill, minmax(290px,1fr)); gap:16px}
+.card{
+  background:var(--card);
+  border:1px solid rgba(255,255,255,0.06);
+  border-radius:14px; padding:16px; position:relative; overflow:hidden;
+}
+.card h3{margin:0 0 8px; font-size:20px}
+.meta{font-size:13px; color:var(--muted); margin-bottom:8px}
+.badges{display:flex; flex-wrap:wrap; gap:8px; margin:8px 0 12px}
+.badge{font-size:12px; border:1px solid rgba(255,255,255,0.2); color:var(--muted); padding:2px 8px; border-radius:999px}
+.btns{display:flex; flex-wrap:wrap; gap:8px}
+.btn{
+  --c:#444;
+  background:var(--c); color:white; border:none; border-radius:10px;
+  padding:10px 12px; font-weight:600; font-size:13px; cursor:pointer; text-decoration:none;
+  display:inline-flex; align-items:center; gap:8px; transition: transform .1s ease, filter .2s ease;
+}
+.btn:hover{ transform: translateY(-1px); filter:brightness(1.08)}
+.btn:active{ transform: translateY(0) scale(.98) }
+.btn .dot{ width:8px; height:8px; border-radius:50%; background:#fff }
+.btn.disabled{ filter:grayscale(0.4) brightness(0.7); cursor:not-allowed }
 
-    header {
-      text-align: center;
-      padding: 20px;
-      background: #333;
-    }
+.card .crown{ position:absolute; top:10px; right:10px; width:28px; height:28px; cursor:pointer; opacity:.9; background:none; border:none; padding:0 }
+.crown svg{ width:28px; height:28px; display:block }
+.crown .fill{ fill: transparent; transition: fill .25s ease }
+.crown .stroke{ stroke: #c9c9d9; stroke-width: 2; fill:none }
+.crown.active .fill{ fill: #ffd54a } /* turns colored when active */
+.crown.active .stroke{ stroke: #ffbf00 }
 
-    h1 {
-      margin: 0;
-      font-size: 2rem;
-      color: #ff8800;
-    }
+/* Confetti */
+.confetti{ position:absolute; pointer-events:none; inset:0 }
+.confetti i{ position:absolute; width:8px; height:8px; opacity:0; transform: translateY(0) rotate(0); animation: fall 2s ease-out forwards }
+@keyframes fall{
+  0%{opacity:1; transform: translateY(-10px) rotate(0deg)}
+  100%{opacity:0; transform: translateY(60px) rotate(360deg)}
+}
 
-    .anime-gallery {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-      gap: 20px;
-      padding: 20px;
-    }
-
-    .anime-card {
-      background: #2c2c2c;
-      border-radius: 10px;
-      overflow: hidden;
-      box-shadow: 0 4px 8px rgba(0,0,0,0.3);
-      transition: transform 0.2s;
-    }
-
-    .anime-card:hover {
-      transform: scale(1.05);
-    }
-
-    .anime-card img {
-      width: 100%;
-      height: auto;
-      display: block;
-    }
-
-    .anime-card h3 {
-      margin: 10px;
-      font-size: 1.1rem;
-      text-align: center;
-      color: #fff;
-    }
-  </style>
+.footer{ color:var(--muted); text-align:center; padding:24px 12px; font-size:12px}
+a.titlelink{ color:inherit; text-decoration:none }
+a.titlelink:hover{ text-decoration:underline }
+.notice{ color:#ffc277; font-size:12px; margin:16px 0 4px }
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>LuAnimeList</title>
+<style>
+:root{--bg:#0b0b12;--card:#141424;--text:#fff;--muted:#b6b6c9;--violet:#8a2be2;}
+*{box-sizing:border-box}body{margin:0;background:#0a0a13;color:var(--text);font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial}
+.header{padding:32px 16px 8px;text-align:center}
+.title-wrap{display:flex;align-items:center;justify-content:center;gap:12px}
+.logo{width:60px;height:auto}
+.title{font-size:clamp(36px,6vw,64px);color:#fff;-webkit-text-stroke:3px var(--violet);text-stroke:3px var(--violet);margin:0 0 6px}
+.subtitle{color:var(--muted);margin:0 0 24px}
+.container{max-width:1100px;margin:0 auto;padding:0 16px 64px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(290px,1fr));gap:16px}
+.card{background:var(--card);border:1px solid rgba(255,255,255,.06);border-radius:14px;padding:16px;position:relative;overflow:hidden}
+.card h3{margin:0 0 8px;font-size:20px}
+.meta{font-size:13px;color:var(--muted);margin-bottom:8px}
+.badges{display:flex;flex-wrap:wrap;gap:8px;margin:8px 0 12px}
+.badge{font-size:12px;border:1px solid rgba(255,255,255,.2);color:var(--muted);padding:2px 8px;border-radius:999px}
+.crown{position:absolute;top:10px;right:10px;width:28px;height:28px;background:none;border:none;cursor:pointer;opacity:.9}
+.crown .fill{fill:transparent;transition:fill .25s}
+.crown .stroke{stroke:#c9c9d9;stroke-width:2;fill:none}
+.crown.active .fill{fill:#ffd54a}.crown.active .stroke{stroke:#ffbf00}
+.confetti{position:absolute;inset:0;pointer-events:none}
+.confetti i{position:absolute;width:8px;height:8px;opacity:0;animation:fall 2s ease-out forwards}
+@keyframes fall{0%{opacity:1;transform:translateY(-10px)}100%{opacity:0;transform:translateY(60px) rotate(360deg)}}
+.btn{--c:#444;background:var(--c);color:#fff;border:none;border-radius:10px;padding:10px 12px;margin:4px;text-decoration:none;display:inline-block;font-weight:600}
+.footer{color:var(--muted);text-align:center;padding:24px 12px;font-size:12px}
+a{color:inherit;text-decoration:none}a:hover{text-decoration:underline}
+</style>
 </head>
 <body>
-
-  <header>
-    <h1>Meine Anime Galerie</h1>
+  <header class="header">
+<header class="header">
+  <div class="title-wrap">
+    <!-- Hier kannst du später ein Bild einfügen: <img src="logo.png" alt="Logo" class="logo"> -->
+    <h1 class="title">LuAnimeList</h1>
+    <p class="subtitle">Deine Anime‑Sammlung • Klick auf den Titel für Details • Klicke die Krone für Favoriten (Konfetti! 🎉)</p>
   </header>
 
-  <div class="anime-gallery" id="gallery"></div>
+  <div class="container">
+    <div id="grid" class="grid"></div>
+    <p class="notice">Hinweis: Ich verlinke nur auf legale Anbieter. „AniWorld“ wird aus rechtlichen Gründen nicht direkt verlinkt (Button ohne Link).</p>
+  </div>
+  <p class="subtitle">Klick auf den Titel für Details • Krone = Favorit (Konfetti 🎉)</p>
+</header>
 
+<div class="container"><div id="app"></div></div>
+<footer class="footer">© LuAnimeList</footer>
+
+<script>
+/* ========== Daten: alle Anime + Trailer + NUR offizielle Links ========== */
+const DATA = [
+  {title:"The Seven Deadly Sins",slug:"the-seven-deadly-sins",
+   genres:["Action","Fantasy","Adventure","Shōnen"],
+   trailer:"https://youtu.be/_erEYpW3L0E",
+   providers:[ /* kein offizieller Link geschickt */ ]},
+
+  {title:"The Seven Deadly Sins: Dragon’s Judgement",slug:"the-seven-deadly-sins-dragons-judgement",
+   genres:["Action","Fantasy","Adventure","Shōnen"],
+   trailer:"https://youtu.be/0kgL6OKT5nw",
+   providers:[{name:"Netflix",url:"https://www.netflix.com/de/title/80050063?s=i&trkid=254567369&vlang=de&trg=cp"}]},
+
+  {title:"The Seven Deadly Sins: Four Knights of the Apocalypse",slug:"the-seven-deadly-sins-four-knights-of-the-apocalypse",
+   genres:["Action","Fantasy","Adventure","Shōnen"],
+   trailer:"https://youtu.be/kKRP8ATyq3k",
+   providers:[{name:"Netflix",url:"https://www.netflix.com/de/title/81562396?s=i&trkid=258593161&vlang=de&trg=cp"}]},
+
+  {title:"Chainsaw Man",slug:"chainsaw-man",
+   genres:["Action","Horror","Supernatural","Dark Fantasy"],
+   trailer:"https://youtu.be/H43cNX07HFQ",
+   providers:[ /* kein offizieller Link geschickt */ ]},
+
+  {title:"Solo Leveling",slug:"solo-leveling",
+   genres:["Action","Fantasy","Adventure"],
+   trailer:"https://youtu.be/x40O_l6Nk3U",
+   providers:[
+     {name:"Crunchyroll",url:"https://crunchyroll.com/series/GDKHZEJ0K/solo-leveling"}
+   ]},
+
+  {title:"My Hero Academia",slug:"my-hero-academia",
+   genres:["Action","Superhero","Shōnen"],
+   trailer:"", providers:[
+     {name:"Crunchyroll",url:"https://crunchyroll.com/series/G6NQ5DWZ6/my-hero-academia"}
+   ]},
+
+  {title:"Naruto Shippuden",slug:"naruto-shippuden",
+   genres:["Action","Adventure","Ninja","Shōnen"],
+   trailer:"https://youtu.be/1GHJFYExsJU",
+   providers:[{name:"Netflix",url:"https://www.netflix.com/de/title/80000603?s=i&trkid=254643526&vlang=de&trg=cp"}]},
+
+  {title:"Tokyo Ghoul",slug:"tokyo-ghoul",
+   genres:["Horror","Supernatural","Dark Fantasy"],
+   trailer:"https://youtu.be/BCP6n6bsPWw",
+   providers:[{name:"Crunchyroll",url:"https://crunchyroll.com/series/G6NV7Z50Y/tokyo-ghoul"}]},
+
+  {title:"Attack on Titan (Shingeki no Kyojin)",slug:"attack-on-titan",
+   genres:["Action","Dark Fantasy","Postapokalyptisch"],
+   trailer:"https://youtu.be/79oqWomZ6x4",
+   providers:[ /* kein offizieller Link geschickt */ ]},
+
+  {title:"Elfen Lied",slug:"elfen-lied",
+   genres:["Horror","Psychological","Drama"],
+   trailer:"https://youtu.be/wGeXsBWw4mM",
+   providers:[ /* kein offizieller Link geschickt */ ]},
+
+  {title:"Failure Frame: I Became the Strongest and Annihilated Everything With Low-Level Spells",slug:"failure-frame",
+   genres:["Dark Fantasy","Isekai","Action"],
+   trailer:"https://youtu.be/O5vpnueJWeI",
+   providers:[{name:"Crunchyroll",url:"https://crunchyroll.com/series/G3KHEVD3E/failure-frame-i-became-the-strongest-and-annihilated-everything-with-low-level-spells"}]},
+
+  {title:"You Are My Eternity (Fumetsu no Anata e)",slug:"you-are-my-eternity",
+   genres:["Drama","Fantasy","Adventure"],
+   trailer:"https://youtu.be/ueptsgaya_Q",
+   providers:[{name:"Crunchyroll",url:"https://crunchyroll.com/series/GG5H5XMWV/to-your-eternity"}]},
+
+  {title:"Sword Art Online",slug:"sword-art-online",
+   genres:["Sci-Fi","Isekai","Adventure","Romance"],
+   trailer:"https://youtu.be/w8s65ioWIJQ",
+   providers:[{name:"Crunchyroll",url:"https://crunchyroll.com/series/GR49G9VP6/sword-art-online"}]},
+
+  {title:"Higurashi",slug:"higurashi",
+   genres:["Horror","Mystery","Psychological"],
+   trailer:"https://youtu.be/7pz5iub3bug",
+   providers:[ /* kein offizieller Link geschickt */ ]},
+
+  {title:"Masamune-kun’s Revenge (Staffel 1 & 2)",slug:"masamune-kuns-revenge",
+   genres:["Romance","Comedy","School"],
+   trailer:"https://youtu.be/V21sAf_UMMY",
+   providers:[{name:"Crunchyroll",url:"https://crunchyroll.com/series/GYX02P3MR/masamune-kuns-revenge"}]},
+
+  {title:"Reborn as a Vending Machine, I Now Wander the Dungeon",slug:"reborn-as-a-vending-machine",
+   genres:["Comedy","Isekai","Fantasy"],
+   trailer:"https://youtu.be/RVyhFZF5ius",
+   providers:[{name:"Crunchyroll",url:"https://crunchyroll.com/series/GVDHX8504/reborn-as-a-vending-machine-i-now-wander-the-dungeon"}]},
+
+  <footer class="footer">© LuAnimeList • Region: Schweiz (DE‑Audio/Sub, soweit verfügbar)</footer>
+
+  <script src="data.js"></script>
   <script>
-    const DATA=[
-      {title:"Assassination Classroom", slug:"assassination-classroom", image:"images/images/IMG_0597.jpeg"},
-      {title:"Attack on Titan", slug:"attack-on-titan", image:"images/images/IMG_0598.png"},
-      {title:"Chainsaw Man", slug:"chainsaw-man", image:"images/images/IMG_0599.jpeg"},
-      {title:"Charlotte", slug:"charlotte", image:"images/images/IMG_0602.jpeg"},
-      {title:"Dan Da Dan", slug:"dan-da-dan", image:"images/images/IMG_0603.jpeg"},
-      {title:"Demon Slayer", slug:"demon-slayer", image:"images/images/IMG_0604.jpeg"},
-      {title:"Dr. STONE", slug:"dr-stone", image:"images/images/IMG_0605.jpeg"},
-      {title:"Elfen Lied", slug:"elfen-lied", image:"images/images/IMG_0607.png"},
-      {title:"Failure Frame", slug:"failure-frame", image:"images/images/IMG_0608.jpeg"},
-      {title:"Gachiakuta", slug:"gachiakuta", image:"images/images/IMG_0610.jpeg"},
-      {title:"Hell’s Paradise", slug:"hells-paradise", image:"images/images/IMG_0611.jpeg"},
-      {title:"Higurashi", slug:"higurashi", image:"images/images/IMG_0612.jpeg"},
-      {title:"Junji Ito Collection", slug:"junji-ito-collection", image:"images/images/IMG_0613.jpeg"},
-      {title:"Lookism", slug:"lookism", image:"images/images/IMG_0615.jpeg"},
-      {title:"Lord of Mysteries", slug:"lord-of-mysteries", image:"images/images/IMG_0616.jpeg"},
-      {title:"Masamune-kun’s Revenge", slug:"masamune-kun-revenge", image:"images/images/IMG_0617.jpeg"},
-      {title:"Mashle", slug:"mashle", image:"images/images/IMG_0618.jpeg"},
-      {title:"Mushoku Tensei", slug:"mushoku-tensei", image:"images/images/IMG_0619.jpeg"},
-      {title:"My Hero Academia", slug:"my-hero-academia", image:"images/images/IMG_0622.jpeg"},
-      {title:"Naruto Shippuden", slug:"naruto-shippuden", image:"images/images/IMG_0624.jpeg"},
-      {title:"One Punch Man", slug:"one-punch-man", image:"images/images/IMG_0625.jpeg"},
-      {title:"Reborn as a Vending Machine", slug:"reborn-as-a-vending-machine", image:"images/images/IMG_0626.jpeg"},
-      {title:"Solo Leveling", slug:"solo-leveling", image:"images/images/IMG_0627.jpeg"},
-      {title:"Sword Art Online", slug:"sao", image:"images/images/IMG_0600.png"},
-      {title:"The Seven Deadly Sins", slug:"seven-deadly-sins", image:"images/images/IMG_0538.jpeg"},
-      {title:"Tokyo Ghoul", slug:"tokyo-ghoul", image:"images/images/IMG_0447.webp"},
-      {title:"Tokyo Revengers", slug:"tokyo-revengers", image:"images/images/IMG_0448.png"},
-      {title:"Wind Breaker", slug:"wind-breaker", image:"images/images/IMG_0609.webp"},
-      {title:"You Are My Eternity", slug:"you-are-my-eternity", image:"images/images/IMG_0614.webp"}
-    ];
+const PROVIDER_COLOR = {
+  "Crunchyroll":"#ff8800",
+  "Amazon Prime":"#1f6feb",
+  "Disney+":"#ff69b4",
+  "Netflix":"#e50914",
+  "AniWorld":"#8a2be2"
+};
+function dot(){ return '<span class="dot"></span>' }
 
-    const gallery = document.getElementById("gallery");
-    DATA.forEach(anime => {
-      const card = document.createElement("div");
-      card.className = "anime-card";
+function confettiBurst(root, x, y){
+  const colors = ['#ffd54a','#ff7a7a','#7ae0ff','#9d7aff','#7aff9a','#ff7ae1'];
+  {title:"Demon Slayer",slug:"demon-slayer",
+   genres:["Action","Dark Fantasy"],
+   trailer:"https://youtu.be/s2BNK1uy42g",
+   providers:[{name:"Crunchyroll",url:"https://crunchyroll.com/series/GY5P48XEY/demon-slayer-kimetsu-no-yaiba"}]},
 
-      const img = document.createElement("img");
-      img.src = anime.image;
-      img.alt = anime.title;
+  {title:"Tokyo Revengers",slug:"tokyo-revengers",
+   genres:["Action","Time Travel","Drama"],
+   trailer:"https://youtu.be/fSHhNUmXMeA",
+   providers:[{name:"Crunchyroll",url:"https://crunchyroll.com/series/G3KHEVMN1/tokyo-revengers"}]},
 
-      const title = document.createElement("h3");
-      title.textContent = anime.title;
+  {title:"One Punch Man",slug:"one-punch-man",
+   genres:["Action","Comedy","Superhero"],
+   trailer:"https://youtu.be/B_jg-uHObrI",
+   providers:[ /* kein offizieller Link geschickt */ ]},
 
-      card.appendChild(img);
-      card.appendChild(title);
-      gallery.appendChild(card);
+  {title:"Hell’s Paradise",slug:"hells-paradise",
+   genres:["Action","Dark Fantasy"],
+   trailer:"https://youtu.be/aoPX_cCfzXo",
+   providers:[
+     {name:"Crunchyroll",url:"https://crunchyroll.com/series/GJ0H7Q5ZJ/hells-paradise"},
+     {name:"Netflix",url:"https://www.netflix.com/de/title/81574246?s=i&trkid=254643526&vlang=de&trg=cp"}
+   ]},
+
+  {title:"Dan Da Dan",slug:"dan-da-dan",
+   genres:["Supernatural","Action","Comedy","Romance"],
+   trailer:"https://youtu.be/TEa98DnsSYY",
+   providers:[
+     {name:"Crunchyroll",url:"https://crunchyroll.com/series/GG5H5XQ0D/dan-da-dan"},
+     {name:"Netflix",url:"https://www.netflix.com/de/title/81736884?s=i&trkid=258593161&vlang=de&trg=cp"}
+   ]},
+
+  {title:"Dr. STONE",slug:"dr-stone",
+   genres:["Sci-Fi","Adventure"],
+   trailer:"https://youtu.be/aqAw1rilA24",
+   providers:[{name:"Crunchyroll",url:"https://crunchyroll.com/series/GYEXQKJG6/dr-stone"}]},
+
+  {title:"Mashle",slug:"mashle",
+   genres:["Action","Comedy","Fantasy"],
+   trailer:"https://youtu.be/Y1HXrFvYwEI",
+   providers:[{name:"Crunchyroll",url:"https://crunchyroll.com/series/GDKHZEP8W/mashle-magic-and-muscles"}]},
+
+  {title:"Junji Ito Collection",slug:"junji-ito-collection",
+   genres:["Horror"],
+   trailer:"https://youtu.be/4OtHRdU5SPk",
+   providers:[{name:"Crunchyroll",url:"https://crunchyroll.com/series/G68V4NDJ6/junji-ito-collection"}]},
+
+  {title:"Gachiakuta",slug:"gachiakuta",
+   genres:["Action","Mystery","Dark Fantasy"],
+   trailer:"https://youtu.be/vkT2Oz8GqNw",
+   providers:[{name:"Crunchyroll",url:"https://crunchyroll.com/series/GP5HJ84P7/gachiakuta"}]},
+
+  {title:"Charlotte",slug:"charlotte",
+   genres:["Drama","Supernatural","School"],
+   trailer:"https://youtu.be/QscDO21WMl0",
+   providers:[ /* kein offizieller Link geschickt */ ]},
+
+  {title:"Mushoku Tensei",slug:"mushoku-tensei",
+   genres:["Fantasy","Isekai","Drama"],
+   trailer:"https://youtu.be/OvWiug-AB8w",
+   providers:[{name:"Crunchyroll",url:"https://crunchyroll.com/series/G24H1N3MP/mushoku-tensei-jobless-reincarnation"}]},
+
+  {title:"Wind Breaker",slug:"wind-breaker",
+   genres:["Action","School"],
+   trailer:"https://youtu.be/Sdddy0LoTYI",
+   providers:[{name:"Crunchyroll",url:"https://crunchyroll.com/series/G3KHEVDPE/wind-breaker"}]},
+
+  {title:"Assassination Classroom",slug:"assassination-classroom",
+   genres:["Action","Comedy","School"],
+   trailer:"https://youtu.be/OzXYtOtYKoM",
+   providers:[{name:"Netflix",url:"https://www.netflix.com/de/title/80045948?s=i&trkid=258593161&vlang=de&trg=cp"}]},
+
+  {title:"Lord of Mysteries",slug:"lord-of-mysteries",
+   genres:["Mystery","Supernatural","Fantasy"],
+   trailer:"https://youtu.be/a8p-l75icsA",
+   providers:[{name:"Crunchyroll",url:"https://crunchyroll.com/series/GEXH3W2EZ/lord-of-mysteries"}]},
+
+  {title:"Lookism",slug:"lookism",
+   genres:["Drama","School","Supernatural"],
+   trailer:"https://youtu.be/c5smqeJ1Yxk",
+   providers:[{name:"Netflix",url:"https://www.netflix.com/de/title/81177634?s=i&trkid=258593161&vlang=de&trg=cp"}]}
+];
+
+/* ========== Farben für Buttons ========== */
+const COLORS={"Crunchyroll":"#ff8800","Amazon Prime":"#1f6feb","Disney+":"#ff69b4","Netflix":"#e50914"};
+
+/* ========== Router (Index ↔ Detail) ========== */
+const getSlug=()=>new URLSearchParams(location.search).get("slug");
+
+/* ========== Konfetti & Krone ========== */
+function confettiBurst(root){
+  const colors=['#ffd54a','#ff7a7a','#7ae0ff','#9d7aff','#7aff9a','#ff7ae1'];
+  for(let i=0;i<60;i++){
+    const p=document.createElement('i');
+    p.style.left=(x + (Math.random()*40-20))+'px';
+    p.style.top=(y + (Math.random()*20-10))+'px';
+    p.style.background = colors[Math.floor(Math.random()*colors.length)];
+    p.style.transform = `translateY(${Math.random()*-20}px) rotate(${Math.random()*180}deg)`;
+    p.style.animationDelay = (Math.random()*0.2)+'s';
+    p.style.borderRadius = Math.random()>.5?'50%':'2px';
+    p.style.left=(Math.random()*160+10)+'px';
+    p.style.top=(Math.random()*20)+'px';
+    p.style.background=colors[Math.floor(Math.random()*colors.length)];
+    root.appendChild(p);
+    setTimeout(()=>p.remove(),2100);
+  }
+}
+function setupCrowns(){
+  document.querySelectorAll('.crown').forEach(c=>{
+    c.addEventListener('click', (e)=>{
+    c.addEventListener('click',()=>{
+      c.classList.toggle('active');
+      const rect = c.getBoundingClientRect();
+      const root = c.closest('.card');
+      const overlay = root.querySelector('.confetti');
+      overlay && confettiBurst(overlay, rect.left - root.getBoundingClientRect().left + 14, rect.top - root.getBoundingClientRect().top + 14);
+      const root=c.closest('.card').querySelector('.confetti');
+      if(root) confettiBurst(root);
     });
-  </script>
+  });
+}
+document.addEventListener('DOMContentLoaded', setupCrowns);
 
+    function btn(p){
+      const color = PROVIDER_COLOR[p.name] || "#444";
+      const safe = p.name !== "AniWorld" && p.url;
+      const href = safe ? `href="${p.url}" target="_blank" rel="noopener"` : "";
+      const cls = safe ? "btn" : "btn disabled";
+      const title = safe ? p.name : p.name + " (kein Link)";
+      return `<a class="${cls}" style="--c:${color}" ${href}>${dot()}${title}</a>`;
+    }
+    function card(a){
+      const genres = a.genres.map(g=>`<span class="badge">${g}</span>`).join("");
+      const providers = a.providers && a.providers.length ? a.providers.map(btn).join("") : "<div class='notice'>Noch keine Anbieter.</div>";
+      const trailerBtn = a.trailer ? `<a class="btn" style="--c:#444" href="${a.trailer}" target="_blank" rel="noopener">${dot()}Trailer</a>` : "";
+      return `
+
+/* ========== Hilfen ========== */
+function ytEmbed(url){
+  if(!url) return "";
+  const m = url.match(/youtu\.be\/([A-Za-z0-9_-]+)/) || url.match(/[?&]v=([A-Za-z0-9_-]+)/);
+  const id = m ? m[1] : "";
+  if(!id) return "";
+  return `<iframe width="100%" height="360" src="https://www.youtube-nocookie.com/embed/${id}" title="YouTube Trailer" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>`;
+}
+const btn = (p)=>`<a class="btn" style="--c:${COLORS[p.name]||'#444'}" href="${p.url}" target="_blank" rel="noopener">${p.name}</a>`;
+
+/* ========== Render Index ========== */
+function renderIndex(){
+  const cards = DATA.map(a=>{
+    const badges = a.genres.map(g=>`<span class="badge">${g}</span>`).join("");
+    return `
+      <div class="card" data-slug="${a.slug}">
+        <div class="confetti"></div>
+        <button class="crown" title="Als Favorit markieren" aria-label="Favorit">
+@@ -146,18 +262,37 @@ <h1 class="title">LuAnimeList</h1>
+            <path class="stroke" d="M4 17h16l-1-8-4 3-3-6-3 6-4-3z"></path>
+          </svg>
+        </button>
+        <h3><a class="titlelink" href="detail.html?slug=${a.slug}">${a.title}</a></h3>
+        <h3><a href="?slug=${encodeURIComponent(a.slug)}">${a.title}</a></h3>
+        <div class="meta">${a.genres.join(", ")}</div>
+        <div class="badges">${genres}</div>
+        <div class="btns">${providers}${trailerBtn}</div>
+        <div class="badges">${badges}</div>
+      </div>`;
+    }
+    function render(){
+      const grid = document.getElementById('grid');
+      grid.innerHTML = window.LU_ANIME_DATA.map(card).join("");
+      setupCrowns();
+    }
+    document.addEventListener('DOMContentLoaded', render);
+  </script>
+  }).join("");
+  document.getElementById("app").innerHTML = `<div class="grid">${cards}</div>`;
+  setupCrowns();
+}
+
+/* ========== Render Detail ========== */
+function renderDetail(slug){
+  const a = DATA.find(x=>x.slug===slug);
+  if(!a){ renderIndex(); return; }
+  const trailer = ytEmbed(a.trailer);
+  const links = (a.providers||[]).filter(p=>p && p.url).map(btn).join("");
+  const html = `
+    <div class="card">
+      <h2 style="margin-top:0">${a.title}</h2>
+      <div class="meta">Genres: ${a.genres.join(", ")}</div>
+      ${trailer?`<div style="margin:12px 0">${trailer}</div>`:""}
+      ${links?`<div style="margin-top:8px">${links}</div>`:""}
+      <div style="margin-top:14px"><a href="index.html">← Zurück zur Übersicht</a></div>
+    </div>`;
+  document.getElementById("app").innerHTML = html;
+}
+
+/* ========== Init ========== */
+document.addEventListener("DOMContentLoaded",()=>{
+  const slug = getSlug();
+  slug ? renderDetail(slug) : renderIndex();
+});
+</script>
 </body>
 </html>
