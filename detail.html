@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Anime – Details</title>
+  <link rel="stylesheet" href="styles/style.css">
+  <meta name="description" content="Details zum ausgewählten Anime: Beschreibung, Sprache, Link zum Stream.">
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h1 id="title">Anime</h1>
+      <div>
+        <a class="button" href="index.html">← Zurück zur Liste</a>
+      </div>
+    </div>
+
+    <div id="content" class="card detail">
+      <div id="trailer" class="video" style="display:none;"></div>
+      <div id="extraLinks" class="links" style="display:none;"></div>
+      <div class="row">
+        <div class="col">
+          <h2>Beschreibung</h2>
+          <p id="description">–</p>
+        </div>
+        <div class="col">
+          <h2>Infos</h2>
+          <p><strong>Sprache:</strong> <span class="badge" id="language">–</span></p>
+          <p><strong>Streaming-Link:</strong> <span id="linkWrap">–</span></p>
+        </div>
+      </div>
+    </div>
+
+    <div class="footer">
+      Fehlt etwas? Öffne die Datei <code>data/anime.json</code> und ergänze Sprache oder Link.
+    </div>
+  </div>
+  <script src="scripts/detail.js" defer></script>
+</body>
+</html>

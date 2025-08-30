@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Hilfe – Anime Watchlist</title>
+  <link rel="stylesheet" href="styles/style.css">
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h1>Hilfe</h1>
+      <div><a class="button" href="index.html">← Zurück</a></div>
+    </div>
+    <div class="card">
+      <h2>So benutzt du die Watchlist</h2>
+      <ol>
+        <li>Öffne <code>index.html</code> in deinem Browser.</li>
+        <li>Klicke auf einen Titel, um die Detailseite zu öffnen.</li>
+        <li>Auf der Detailseite siehst du <em>Beschreibung</em>, <em>Sprache</em> und den <em>Streaming-Link</em>.</li>
+      </ol>
+      <h3>Einträge bearbeiten</h3>
+      <p>Öffne die Datei <code>data/anime.json</code> in einem Editor. Beispiel:</p>
+      <pre><code>{
+  "id": "demon-slayer",
+  "title": "Demon Slayer (Kimetsu no Yaiba)",
+  "language": "Deutsch (Dub)",
+  "watch_url": "https://dein-streaming-anbieter.de/titel",
+  "description": "Kurze eigene Beschreibung …"
+}</code></pre>
+      <p>Speichere die Datei. Lade danach die Seite neu (<kbd>F5</kbd>).</p>
+      <h3>Sprachen-Filter</h3>
+      <p>Der Filter zeigt automatisch alle Sprachen an, die in <code>anime.json</code> vorkommen.</p>
+      <h3>Neue Titel hinzufügen</h3>
+      <ol>
+        <li>In <code>anime.json</code> einen neuen Block hinzufügen (achte auf doppelte <code>id</code> zu vermeiden).</li>
+        <li>Die <code>id</code> sollte nur Kleinbuchstaben, Zahlen und Bindestriche enthalten.</li>
+      </ol>
+      <h3>Backup / Teilen</h3>
+      <p>Du kannst den kompletten Ordner als ZIP packen und auf einen USB-Stick legen oder in der Cloud speichern.</p>
+    </div>
+  </div>
+</body>
+</html>
