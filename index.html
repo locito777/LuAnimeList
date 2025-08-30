@@ -162,36 +162,32 @@ function render(listData) {
 // Initial Render
 render(current);
 
-  
-  }
+function bindRowHandlers() {
+  document.querySelectorAll('.row').forEach(row => {
+    const stars = row.querySelectorAll('.stars span');
+    const confirmBox = row.querySelector('.confirm-box');
+    const title = row.querySelector('.stars').dataset.title;
+    let pending = 0;
 
-  function bindRowHandlers() {
-    document.querySelectorAll('.row').forEach(row => {
-      const stars = row.querySelectorAll('.stars span');
-      const confirmBox = row.querySelector('.confirm-box');
-      const title = row.querySelector('.stars').dataset.title;
-      let pending = 0;
-
-      stars.forEach((star, i) => {
-        star.addEventListener('click', () => {
-          pending = i+1;
-          confirmBox.style.display = 'block';
-        }, {passive:true});
-      });
-
-      row.querySelector('.yes').addEventListener('click', () => {
-        ratings[title] = pending;
-        localStorage.setItem('ratings', JSON.stringify(ratings));
-        confirmBox.style.display = 'none';
-        render(current);
-      });
-
-      row.querySelector('.no').addEventListener('click', () => {
-        confirmBox.style.display = 'none';
-      });
+    stars.forEach((star, i) => {
+      star.addEventListener('click', () => {
+        pending = i+1;
+        confirmBox.style.display = 'block';
+      }, {passive:true});
     });
-  }
 
+    row.querySelector('.yes').addEventListener('click', () => {
+      ratings[title] = pending;
+      localStorage.setItem('ratings', JSON.stringify(ratings));
+      confirmBox.style.display = 'none';
+      render(current);
+    });
+
+    row.querySelector('.no').addEventListener('click', () => {
+      confirmBox.style.display = 'none';
+    });
+  });
+}
   q.addEventListener('input', () => {
     const term = q.value.toLowerCase().trim();
     current = DATA.filter(x => x.title.toLowerCase().includes(term));
