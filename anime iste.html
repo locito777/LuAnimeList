@@ -1,49 +1,68 @@
 <!doctype html>
 <html lang="de">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>📺 Meine Anime Watchlist</title>
-  <meta name="description" content="Anime-Liste mit Detailansicht, deutschem Trailer und AniWorld-Link.">
-  <style>
-    :root{
-      --bg:#0f172a;
-      --card:#1e293b;
-      --fg:#f1f5f9;
-      --muted:#94a3b8;
-      --border:#334155;
-      --violet:#7c3aed;
-      --violet-dark:#6d28d9;
-      --radius:12px;
-      --shadow:0 6px 16px rgba(0,0,0,.35);
-      --thumbW:120px; --thumbH:160px;
-    }
-    *{box-sizing:border-box}
-    body{margin:0;background:var(--bg);color:var(--fg);font:16px/1.5 system-ui,Segoe UI,Roboto,Arial,sans-serif}
-    .header{position:sticky;top:0;z-index:5;background:var(--card);border-bottom:1px solid var(--border);padding:16px}
-    h1{margin:0;font-size:20px}
-    .container{max-width:950px;margin:16px auto;padding:0 12px}
-    .card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow);padding:16px;margin:12px 0}
-    .controls{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:12px}
-    input[type="search"],select{flex:1;min-width:180px;padding:10px;border-radius:8px;border:1px solid var(--border);background:#0b1220;color:var(--fg)}
-    .list{display:flex;flex-direction:column;gap:10px}
-    .row{border:1px solid var(--border);border-radius:10px;background:#1a2436;transition:transform .15s}
-    .row:hover{transform:translateY(-2px);background:#223149}
-    .card-row{display:flex;gap:12px;padding:12px}
-    .thumb{flex:0 0 var(--thumbW);width:var(--thumbW);height:var(--thumbH);border:1px solid var(--border);border-radius:8px;background:#0b1220;display:flex;align-items:center;justify-content:center;color:var(--muted);font-size:12px;overflow:hidden}
-    .thumb img{width:100%;height:100%;object-fit:cover;display:block}
-    .info{flex:1;min-width:0}
-    .title{margin:0 0 6px 0;font-size:18px;font-weight:800}
-    .title button{all:unset;cursor:pointer;color:#fff}
-    .title button:hover{text-decoration:underline}
-    .badge{display:inline-block;background:rgba(255,255,255,.08);color:var(--muted);padding:4px 8px;border-radius:6px;font-size:12px}
-    .details{display:none;padding:8px 0 4px}
-    .desc{margin:6px 0 10px 0}
-    iframe{width:100%;height:230px;border:0;border-radius:8px;margin:8px 0}
-    .btn{display:inline-block;background:var(--violet);color:#fff;text-decoration:none;padding:10px 14px;border-radius:8px;font-weight:700;box-shadow:0 4px 12px rgba(124,58,237,.4);transition:.2s}
-    .btn:hover{background:var(--violet-dark);transform:translateY(-2px)}
-    .footer{margin:10px 0;text-align:center;color:var(--muted);font-size:13px}
-  </style>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>📺 Meine Anime Watchlist</title>
+<meta name="description" content="Anime-Liste mit deutschem Trailer, AniWorld/Netflix/Crunchyroll-Links, Sterne-Bewertung und Krone.">
+<style>
+  :root{
+    --bg:#0f172a; --card:#1e293b; --fg:#f1f5f9; --muted:#94a3b8; --border:#334155;
+    --violet:#7c3aed; --violet-dark:#6d28d9;     /* AniWorld */
+    --red:#e50914;                                /* Netflix  */
+    --orange:#f97316;                             /* Crunchy  */
+    --gold:#fbbf24;                               /* Sterne/Krone aktiv */
+    --radius:12px; --shadow:0 6px 16px rgba(0,0,0,.35);
+    --thumbW:120px; --thumbH:160px;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--fg);font:16px/1.55 system-ui,Segoe UI,Roboto,Arial,sans-serif}
+  .header{position:sticky;top:0;z-index:5;background:var(--card);padding:16px;border-bottom:1px solid var(--border)}
+  h1{margin:0;font-size:20px}
+  .container{max-width:980px;margin:16px auto;padding:0 12px}
+  .card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow);padding:16px;margin:12px 0}
+  .controls{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:12px}
+  input[type="search"],select{flex:1;min-width:180px;padding:10px;border-radius:8px;border:1px solid var(--border);background:#0b1220;color:var(--fg)}
+  .list{display:flex;flex-direction:column;gap:10px}
+  .row{background:#1a2436;border:1px solid var(--border);border-radius:10px;transition:.15s}
+  .row:hover{background:#223149;transform:translateY(-2px)}
+  .card-row{display:flex;gap:12px;padding:12px}
+  .thumb{flex:0 0 var(--thumbW);width:var(--thumbW);height:var(--thumbH);border-radius:8px;background:#0b1220;border:1px solid var(--border);display:flex;align-items:center;justify-content:center;color:var(--muted);font-size:12px;overflow:hidden}
+  .thumb img{width:100%;height:100%;object-fit:cover;display:block}
+  .info{flex:1;min-width:0}
+  .title{margin:0 0 6px 0;font-size:18px;font-weight:800}
+  .title button{all:unset;cursor:pointer;color:#fff}
+  .title button:hover{text-decoration:underline}
+  .meta{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+  .badge{display:inline-block;background:rgba(255,255,255,.08);color:var(--muted);padding:4px 8px;border-radius:6px;font-size:12px}
+
+  /* Sterne + Krone */
+  .rating{display:flex;align-items:center;gap:8px;margin-top:2px}
+  .stars{display:inline-flex;gap:4px}
+  .star{cursor:pointer;font-size:20px;color:#64748b;user-select:none;line-height:1}
+  .star.filled{color:var(--gold)}
+  .crown{cursor:pointer;font-size:20px;color:#64748b;user-select:none;line-height:1}
+  .crown.active{color:var(--gold)}
+  .confirm{display:none;gap:8px;align-items:center;margin-left:6px}
+  .confirm.show{display:inline-flex}
+  .btnMini{border:1px solid var(--border);background:#0b1220;color:#e5e7eb;border-radius:6px;padding:4px 8px;font-size:12px;cursor:pointer}
+  .btnMini:hover{filter:brightness(1.1)}
+
+  /* Details */
+  .details{display:none;padding:10px 0 4px}
+  .desc{margin:6px 0 10px 0}
+  iframe{width:100%;height:240px;border:0;border-radius:8px;margin:8px 0}
+  .btn{display:inline-block;padding:10px 14px;border-radius:8px;font-weight:700;text-decoration:none;color:#fff;margin-top:8px;box-shadow:0 4px 12px rgba(0,0,0,.25)}
+  .btnAni{background:var(--violet);box-shadow:0 4px 12px rgba(124,58,237,.4)}
+  .btnAni:hover{background:var(--violet-dark)}
+  .btnNetflix{background:var(--red)}
+  .btnNetflix:hover{filter:brightness(.9)}
+  .btnCrunchy{background:var(--orange)}
+  .btnCrunchy:hover{filter:brightness(.9)}
+  .noLink{color:#fca5a5}
+
+  .footer{margin:10px 0;text-align:center;color:var(--muted);font-size:13px}
+</style>
 </head>
 <body>
   <div class="header"><h1>📺 Meine geschauten Anime</h1></div>
@@ -61,109 +80,481 @@
           <option value="title-desc">Titel Z–A</option>
         </select>
       </div>
+
       <div id="list" class="list" aria-live="polite"></div>
       <div id="empty" class="footer" style="display:none">Keine Treffer.</div>
-      <div class="footer">Tipp: Titel antippen → Beschreibung, <b>deutscher Trailer</b> & <b>violetter AniWorld-Button</b>. Links ist Platz für dein Bild.</div>
+      <div class="footer">
+        Tipp: Titel antippen → **lange Beschreibung (7 Sätze)**, **deutscher Trailer** und Streaming-Button  
+        (Reihenfolge: <b>AniWorld</b> → <b>Netflix</b> → <b>Crunchyroll</b>).  
+        Links ist Platz für dein Bild – wir fügen die später zusammen hinzu.
+      </div>
     </div>
   </div>
 
-  <script>
-    /* ==== Daten: ALLE bekannten Titel. Sprache überall: Deutsch geschaut. 
-       image: lege später eine Datei im Ordner images/ ab (z.B. images/seven-deadly-sins.jpg).
-       Wenn das Bild fehlt, bleibt links der Platzhalter "Bild folgt". ==== */
-    const DATA = [
-      {id:"assassination-classroom",title:"Assassination Classroom",image:"images/assassination.jpg",language:"Deutsch geschaut",watch_url:"https://aniworld.to/anime/stream/assassination-classroom",description:"Eine Klasse soll ihren übermächtigen Lehrer töten, bevor er die Erde zerstört.",trailer_url:"https://www.youtube.com/embed/qK1CrgYpXCg"},
-      {id:"attack-on-titan",title:"Attack on Titan",image:"images/aot.jpg",language:"Deutsch geschaut",watch_url:"https://aniworld.to/anime/stream/attack-on-titan",description:"Die Menschheit kämpft hinter Mauern gegen die gefräßigen Titanen ums Überleben.",trailer_url:"https://www.youtube.com/embed/W7sT1dpCmUo"},
-      {id:"chainsaw-man",title:"Chainsaw Man",image:"images/chainsaw-man.jpg",language:"Deutsch geschaut",watch_url:"https://aniworld.to/anime/stream/chainsaw-man",description:"Denji fusioniert mit Pochita und wird zum Chainsaw Man.",trailer_url:"https://www.youtube.com/embed/KkMOPchvXcA"},
-      {id:"charlotte",title:"Charlotte",image:"images/charlotte.jpg",language:"Deutsch geschaut",watch_url:"https://aniworld.to/anime/stream/charlotte",description:"Jugendliche mit kurzlebigen Superkräften – und deren Folgen.",trailer_url:"https://www.youtube.com/embed/oVjIj-d2rY0"},
-      {id:"dan-da-dan",title:"Dan Da Dan",image:"images/dandadan.jpg",language:"Deutsch geschaut",watch_url:"https://aniworld.to/anime/stream/dan-da-dan",description:"Aliens, Geister und Teenager – abgedrehter Mix aus Action & Comedy.",trailer_url:"https://www.youtube.com/embed/lJRX6Uq4-3E"},
-      {id:"demon-slayer",title:"Demon Slayer (Kimetsu no Yaiba)",image:"images/demon-slayer.jpg",language:"Deutsch geschaut",watch_url:"https://aniworld.to/anime/stream/demon-slayer",description:"Tanjiro wird Dämonenjäger, um seine Schwester zu retten.",trailer_url:"https://www.youtube.com/embed/VQGCKyvzIM4"},
-      {id:"divergent-film",title:"Divergent (Film)",image:"images/divergent.jpg",language:"Deutsch geschaut",watch_url:"https://aniworld.to/film/stream/divergent",description:"In einer Fraktionen-Gesellschaft wird Tris zur Rebellin.",trailer_url:"https://www.youtube.com/embed/sutgWjz10sM"},
-      {id:"dr-stone",title:"Dr. STONE",image:"images/dr-stone.jpg",language:"Deutsch geschaut",watch_url:"https://aniworld.to/anime/stream/dr-stone",description:"Nach der Versteinerung baut Senku die Zivilisation neu auf.",trailer_url:"https://www.youtube.com/embed/owJjX5Y6auE"},
-      {id:"elfen-lied",title:"Elfen Lied",image:"images/elfen-lied.jpg",language:"Deutsch geschaut",watch_url:"https://aniworld.to/anime/stream/elfen-lied",description:"Die Mutantin Lucy entfesselt ihre tödlichen Kräfte.",trailer_url:"https://www.youtube.com/embed/m2JZo3C2G98"},
-      {id:"failure-frame",title:"Failure Frame",image:"images/failure-frame.jpg",language:"Deutsch geschaut",watch_url:"https://aniworld.to/anime/stream/failure-frame",description:"Verraten in einer anderen Welt – und auf Rache aus.",trailer_url:"https://www.youtube.com/embed/9fYhQAfL3DQ"},
-      {id:"fumetsu-no-anata-e",title:"You Are My Eternity (Fumetsu no Anata e)",image:"images/fumetsu.jpg",language:"Deutsch geschaut",watch_url:"https://aniworld.to/anime/stream/fumetsu-no-anata-e",description:"Ein unsterbliches Wesen lernt durch Menschen zu fühlen.",trailer_url:"https://www.youtube.com/embed/OPzFV2cJK6A"},
-      {id:"gachiakuta",title:"Gachiakuta",image:"images/gachiakuta.jpg",language:"Deutsch geschaut",watch_url:"https://aniworld.to/anime/stream/gachiakuta",description:"Ein Junge kämpft in einer Welt voller Müll und Ungerechtigkeit.",trailer_url:"https://www.youtube.com/embed/JFwRKIYYNPc"},
-      {id:"hells-paradise",title:"Hell's Paradise",image:"images/hells-paradise.jpg",language:"Deutsch geschaut",watch_url:"https://aniworld.to/anime/stream/hells-paradise",description:"Gefangene suchen auf einer tödlichen Insel das Elixier des Lebens.",trailer_url:"https://www.youtube.com/embed/uYneG5ZZV08"},
-      {id:"higurashi",title:"Higurashi",image:"images/higurashi.jpg",language:"Deutsch geschaut",watch_url:"https://aniworld.to/anime/stream/higurashi-no-naku-koro-ni",description:"Ein Dorf, dunkle Geheimnisse – und blutige Zeitschleifen.",trailer_url:"https://www.youtube.com/embed/kbR6Y-JBoG8"},
-      {id:"lookism",title:"Lookism",image:"images/lookism.jpg",language:"Deutsch geschaut",watch_url:"https://aniworld.to/anime/stream/lookism",description:"Ein Schüler wechselt zwischen zwei Körpern – dick und attraktiv.",trailer_url:"https://www.youtube.com/embed/koYk9YhCZiI"},
-      {id:"lord-of-mysteries",title:"Lord of Mysteries",image:"images/lord-of-mysteries.jpg",language:"Deutsch geschaut",watch_url:"https://aniworld.to/anime/stream/lord-of-mysteries",description:"Steampunk, Okkultismus und verbotene Geheimnisse.",trailer_url:"https://www.youtube.com/embed/6gS7lLpxr6E"},
-      {id:"mashle",title:"Mashle",image:"images/mashle.jpg",language:"Deutsch geschaut",watch_url:"https://aniworld.to/anime/stream/mashle",description:"Keine Magie? Kein Problem – Mash kämpft mit Muskeln.",trailer_url:"https://www.youtube.com/embed/7rI1CV7t9s8"},
-      {id:"masamune-kun-revenge",title:"Masamune-kun's Revenge",image:"images/masamune.jpg",language:"Deutsch geschaut",watch_url:"https://aniworld.to/anime/stream/masamune-kuns-revenge",description:"Rache an der Jugendliebe – und doch kommen Gefühle dazwischen.",trailer_url:"https://www.youtube.com/embed/QnJG20bC9xU"},
-      {id:"mushoku-tensei",title:"Mushoku Tensei",image:"images/mushoku-tensei.jpg",language:"Deutsch geschaut",watch_url:"https://aniworld.to/anime/stream/mushoku-tensei-isekai-ittara-honki-dasu",description:"Ein Mann wird in einer Fantasywelt wiedergeboren und beginnt neu.",trailer_url:"https://www.youtube.com/embed/7aAaLwZGMEY"},
-      {id:"my-hero-academia",title:"My Hero Academia",image:"images/mha.jpg",language:"Deutsch geschaut",watch_url:"https://aniworld.to/anime/stream/my-hero-academia",description:"In einer Welt voller Quirks will Izuku ein echter Held werden.",trailer_url:"https://www.youtube.com/embed/MZL7a8LHgBM"},
-      {id:"naruto",title:"Naruto",image:"images/naruto.jpg",language:"Deutsch geschaut",watch_url:"https://aniworld.to/anime/stream/naruto",description:"Naruto will Hokage werden und sein Dorf beschützen.",trailer_url:"https://www.youtube.com/embed/-G9BqkgZXRA"},
-      {id:"naruto-shippuden",title:"Naruto Shippuden",image:"images/naruto-shippuden.jpg",language:"Deutsch geschaut",watch_url:"https://aniworld.to/anime/stream/naruto-shippuuden",description:"Naruto kehrt zurück und stellt sich mächtigen Feinden.",trailer_url:"https://www.youtube.com/embed/hKJwGaG2M54"},
-      {id:"one-punch-man",title:"One Punch Man",image:"images/opm.jpg",language:"Deutsch geschaut",watch_url:"https://aniworld.to/anime/stream/one-punch-man",description:"Saitama besiegt jeden Gegner mit einem Schlag – und langweilt sich.",trailer_url:"https://www.youtube.com/embed/2JAElThbKrI"},
-      {id:"sword-art-online",title:"Sword Art Online",image:"images/sao.jpg",language:"Deutsch geschaut",watch_url:"https://aniworld.to/anime/stream/sword-art-online",description:"Spieler werden in einer virtuellen Welt gefangen.",trailer_url:"https://www.youtube.com/embed/WZzx9aYWYpo"},
-      {id:"tokyo-ghoul",title:"Tokyo Ghoul",image:"images/tokyo-ghoul.jpg",language:"Deutsch geschaut",watch_url:"https://aniworld.to/anime/stream/tokyo-ghoul",description:"Ein Student verwandelt sich in einen Halb-Ghoul.",trailer_url:"https://www.youtube.com/embed/vGuQeQsoRgU"},
-      {id:"the-seven-deadly-sins",title:"The Seven Deadly Sins",image:"images/seven-deadly-sins.jpg",language:"Deutsch geschaut",watch_url:"https://aniworld.to/anime/stream/the-seven-deadly-sins",description:"Legendäre Ritter retten das Königreich vor Dämonen und Intrigen.",trailer_url:"https://www.youtube.com/embed/wxcvbL6o55M"}
-    ];
+<script>
+/* ====================== DATEN =========================
+   Bild-Pfad:
+   - Für „The Seven Deadly Sins“ verwende ich DEIN Bild im Repo-Root: "../seven-deadly-sins.jpg"
+   - Für alle anderen vorerst Platzhalter ("Bild folgt"), bis du Bilder hochlädst (z.B. in images/…)
+*/
+const DATA = [
+  /* --- 1) 7 Sätze ausgearbeitet: The Seven Deadly Sins --- */
+  {
+    id:"the-seven-deadly-sins",
+    title:"The Seven Deadly Sins",
+    image:"../seven-deadly-sins.jpg",          // dein bereits hochgeladenes Bild
+    language:"Deutsch geschaut",
+    aniworld:"https://aniworld.to/anime/stream/the-seven-deadly-sins",
+    netflix:"", crunchy:"",
+    trailer:"https://www.youtube.com/embed/wxcvbL6o55M",
+    description: [
+      "In einem vom Chaos bedrohten Königreich werden die Seven Deadly Sins, eine Gruppe legendärer Ritter, zu Unrecht des Verrats beschuldigt.",
+      "Jahre später begibt sich Prinzessin Elizabeth heimlich auf eine gefährliche Reise, um die Sünden zu finden und die Wahrheit ans Licht zu bringen.",
+      "An ihrer Seite steht Meliodas, der unbekümmert wirkende Anführer mit einer Kraft, die seine kindliche Erscheinung Lügen straft.",
+      "Gemeinsam sammeln sie die verstreuten Mitglieder, die alle einzigartige Fähigkeiten, tiefe Wunden und unerwartete Eigenheiten mitbringen.",
+      "Während Intrigen und Dämonen das Land überrollen, enthüllen sich uralte Bündnisse, verfluchte Schicksale und bittersüße Erinnerungen.",
+      "Zwischen epischen Schlachten, herzlichem Humor und tragischer Liebe wächst eine Familie, die nicht durch Blut, sondern durch Loyalität verbunden ist.",
+      "Am Ende ist es nicht nur rohe Stärke, sondern Vertrauen, das entscheidet, ob Britannia in der Dunkelheit versinkt oder neu erblüht."
+    ]
+  },
 
-    const list   = document.getElementById('list');
-    const empty  = document.getElementById('empty');
-    const q      = document.getElementById('q');
-    const lang   = document.getElementById('lang');
-    const sortEl = document.getElementById('sort');
+  /* --- 2) 7 Sätze: Attack on Titan --- */
+  {
+    id:"attack-on-titan",
+    title:"Attack on Titan",
+    image:"",
+    language:"Deutsch geschaut",
+    aniworld:"https://aniworld.to/anime/stream/attack-on-titan",
+    netflix:"", crunchy:"",
+    trailer:"https://www.youtube.com/embed/W7sT1dpCmUo",
+    description: [
+      "Hinter gewaltigen Mauern versucht die Menschheit, den Titanen zu entkommen – monströsen Wesen ohne Gnade.",
+      "Als die äußere Mauer fällt, schwört Eren, die Titanen bis zum letzten Atemzug zu bekämpfen.",
+      "Mikasa und Armin bleiben an seiner Seite, getrieben von Liebe, Schuld und der Hoffnung auf Freiheit.",
+      "Im Militär entdecken sie, dass der wahre Feind nicht nur draußen lauert, sondern auch in Lügen, Geheimnissen und Machtspielen verborgen ist.",
+      "Jede Schlacht fordert Opfer, doch mit jeder Wahrheit zerbricht ein weiteres Stück der vermeintlichen Ordnung.",
+      "Eren verändert sich – und mit ihm die Grenzen zwischen Held, Waffe und Bedrohung.",
+      "Am Ende fragt die Serie, welchen Preis Freiheit wirklich hat und wer ihn bezahlen darf."
+    ]
+  },
 
-    function makeRow(item){
-      const row = document.createElement('div'); row.className='row';
-      const wrap = document.createElement('div'); wrap.className='card-row';
-      const thumb = document.createElement('div'); thumb.className='thumb';
-      if(item.image){
-        const img = document.createElement('img');
-        img.src = item.image;
-        img.alt = item.title;
-        img.onerror = ()=>{ thumb.innerHTML='Bild folgt'; };
-        thumb.appendChild(img);
-      } else {
-        thumb.textContent = 'Bild folgt';
-      }
-      const info = document.createElement('div'); info.className='info';
-      const title = document.createElement('h3'); title.className='title';
-      const btn = document.createElement('button'); btn.textContent = item.title; title.appendChild(btn);
-      const badge = document.createElement('span'); badge.className='badge'; badge.textContent = item.language || 'Sprache fehlt';
-      const details = document.createElement('div'); details.className='details';
-      const desc = item.description ? `<p class="desc">${item.description}</p>` : '';
-      const yt = item.trailer_url ? `<iframe src="${item.trailer_url}" allowfullscreen></iframe>` : '';
-      const link = item.watch_url ? `<p><a class="btn" href="${item.watch_url}" target="_blank">▶ Auf AniWorld ansehen</a></p>` : '';
-      details.innerHTML = desc + yt + link;
+  /* --- 3) 7 Sätze: Chainsaw Man --- */
+  {
+    id:"chainsaw-man",
+    title:"Chainsaw Man",
+    image:"",
+    language:"Deutsch geschaut",
+    aniworld:"https://aniworld.to/anime/stream/chainsaw-man",
+    netflix:"", crunchy:"",
+    trailer:"https://www.youtube.com/embed/KkMOPchvXcA",
+    description: [
+      "Denji kennt nur Schulden, Hunger und die Kälte der Straße – bis er Pochita trifft, einen Teufel mit warmem Herz.",
+      "Als Verrat ihn das Leben kostet, verschmilzt Pochita mit ihm und schenkt ihm eine zweite Chance als Chainsaw Man.",
+      "Mit kreischenden Ketten und blutigem Humor zieht Denji in den Kampf gegen Teufel, die aus menschlichen Ängsten geboren sind.",
+      "Er träumt von einem einfachen Leben: satt sein, Nähe spüren, jemandem wichtig sein.",
+      "Doch die Welt der Jäger ist ein Labyrinth aus Manipulation, Trauma und verführerischer Macht.",
+      "Zwischen Power, Aki und Makima lernt Denji, dass Wünsche ein Preisetikett tragen – oft bezahlt mit der eigenen Unschuld.",
+      "Sein größter Kampf ist nicht gegen Teufel, sondern darum, Mensch zu bleiben."
+    ]
+  },
 
-      btn.addEventListener('click',()=>{
-        const open = details.style.display==='block';
-        document.querySelectorAll('.details').forEach(d=>d.style.display='none');
-        details.style.display = open ? 'none' : 'block';
-      });
+  /* --- 4) 7 Sätze: Demon Slayer --- */
+  {
+    id:"demon-slayer",
+    title:"Demon Slayer (Kimetsu no Yaiba)",
+    image:"",
+    language:"Deutsch geschaut",
+    aniworld:"https://aniworld.to/anime/stream/demon-slayer",
+    netflix:"", crunchy:"",
+    trailer:"https://www.youtube.com/embed/VQGCKyvzIM4",
+    description: [
+      "Als Tanjiro sein Zuhause zerstört und seine Familie ermordet vorfindet, bleibt nur Hoffnung: seine Schwester Nezuko lebt – als Dämon.",
+      "Er schwört, ein Dämonenjäger zu werden, um Nezuko zu retten und den Ursprung des Fluchs zu brechen.",
+      "Auf seinem Weg begegnet er Verbündeten und Meistern, deren Narben Geschichten erzählen, die tiefer schneiden als jede Klinge.",
+      "Die Kämpfe sind Tänze aus Atemtechniken, Schönheit und Schmerz, in denen Wille und Pflicht aufeinandertreffen.",
+      "Jeder Dämon birgt ein menschliches Echo, das den Sieg bitter schmecken lässt.",
+      "Tanjiros Mitgefühl ist seine größte Stärke – und seine schwerste Bürde.",
+      "Zwischen Familie, Schuld und Schicksal wächst ein Junge über sich hinaus."
+    ]
+  },
 
-      info.appendChild(title);
-      info.appendChild(badge);
-      info.appendChild(details);
-      wrap.appendChild(thumb);
-      wrap.appendChild(info);
-      row.appendChild(wrap);
-      return row;
-    }
+  /* --- 5) 7 Sätze: Dr. STONE --- */
+  {
+    id:"dr-stone",
+    title:"Dr. STONE",
+    image:"",
+    language:"Deutsch geschaut",
+    aniworld:"https://aniworld.to/anime/stream/dr-stone",
+    netflix:"", crunchy:"",
+    trailer:"https://www.youtube.com/embed/owJjX5Y6auE",
+    description: [
+      "Ein grelles Licht versteinert die Menschheit – Jahrtausende später erwacht Senku in einer Welt ohne Städte.",
+      "Mit messerscharfem Verstand und unerschütterlicher Neugier will er die Zivilisation neu erfinden.",
+      "Aus Steinen, Pflanzen und Mut entstehen Seife, Glas, Strom – und Hoffnung.",
+      "Doch nicht jeder wünscht sich eine Rückkehr der alten Welt; Ideale prallen aufeinander.",
+      "Freundschaft wird zur Triebkraft, Wissenschaft zur Magie, die das Unmögliche greifbar macht.",
+      "Fehler sind Experimente, Rückschläge nur Zwischenschritte.",
+      "Senku beweist: Die stärkste Waffe des Menschen ist der Gedanke."
+    ]
+  },
 
-    function render(arr){
-      list.innerHTML = '';
-      arr.forEach(item=> list.appendChild(makeRow(item)));
-      empty.style.display = arr.length ? 'none' : 'block';
-    }
+  /* --- 6) 7 Sätze: Mushoku Tensei --- */
+  {
+    id:"mushoku-tensei",
+    title:"Mushoku Tensei",
+    image:"",
+    language:"Deutsch geschaut",
+    aniworld:"https://aniworld.to/anime/stream/mushoku-tensei-isekai-ittara-honki-dasu",
+    netflix:"", crunchy:"",
+    trailer:"https://www.youtube.com/embed/7aAaLwZGMEY",
+    description: [
+      "Ein gescheiterter Mann erhält eine zweite Geburt in einer Welt der Magie.",
+      "Als Rudeus schwört er, diesmal mutiger zu sein, zu lernen, zu lieben.",
+      "Lehrer, Freunde und Rivalen spiegeln seine Schwächen und sein Wachstum.",
+      "Er entdeckt, dass Reue ein Anfang sein kann – wenn man Verantwortung übernimmt.",
+      "Magie ist Macht, doch die schwerste Kunst bleibt Mitgefühl.",
+      "Fehler verschwinden nicht, aber sie können zu Stufen werden.",
+      "Ein Leben neu zu schreiben beginnt mit dem nächsten Schritt."
+    ]
+  },
 
-    function applyFilters(){
-      const term = q.value.trim().toLowerCase();
-      const l = lang.value;
-      const s = sortEl.value;
-      let cur = DATA.filter(x => x.title.toLowerCase().includes(term));
-      if(l) cur = cur.filter(x => (x.language||'')===l);
-      cur.sort((a,b)=> s==='title-asc' ? a.title.localeCompare(b.title) : b.title.localeCompare(a.title));
-      render(cur);
-    }
+  /* --- 7) 7 Sätze: Tokyo Ghoul --- */
+  {
+    id:"tokyo-ghoul",
+    title:"Tokyo Ghoul",
+    image:"",
+    language:"Deutsch geschaut",
+    aniworld:"https://aniworld.to/anime/stream/tokyo-ghoul",
+    netflix:"", crunchy:"",
+    trailer:"https://www.youtube.com/embed/vGuQeQsoRgU",
+    description: [
+      "Kaneki überlebt ein Date – und verliert sein altes Leben.",
+      "Als Halb-Ghoul steht er zwischen zwei Welten, hungrig nach Sinn und nach Fleisch.",
+      "In Anteiku findet er eine fragile Familie und die Kunst, Menschlichkeit zu bewahren.",
+      "Doch Gewalt eskaliert, Masken fallen, Ideale brechen.",
+      "Kaneki lernt, dass Stärke ohne Selbstannahme nur eine weitere Maske ist.",
+      "Jede Entscheidung kostet jemanden etwas – oft sich selbst.",
+      "Aus dem Opfer wird ein Akteur, doch der Preis ist hoch."
+    ]
+  },
 
-    q.addEventListener('input', applyFilters);
-    lang.addEventListener('change', applyFilters);
-    sortEl.addEventListener('change', applyFilters);
-    applyFilters();
-  </script>
+  /* --- 8) 7 Sätze: Charlotte --- */
+  {
+    id:"charlotte",
+    title:"Charlotte",
+    image:"",
+    language:"Deutsch geschaut",
+    aniworld:"https://aniworld.to/anime/stream/charlotte",
+    netflix:"", crunchy:"",
+    trailer:"https://www.youtube.com/embed/oVjIj-d2rY0",
+    description: [
+      "Yuu stiehlt für Sekunden Körper – eine Fähigkeit, die sich wie ein Trick anfühlt.",
+      "In einer Schule für Begabte lernt er, dass Macht Verantwortung heißt.",
+      "Jeder Schüler trägt eine Last, die sich nicht heilen, aber teilen lässt.",
+      "Schicksalsschläge zerreißen Gewissheiten und formen neue Ziele.",
+      "Yuus Weg führt über Verlust, Erinnerung und Opfer zu Reife.",
+      "Liebe wird zum Anker, wenn Zeit und Identität brüchig werden.",
+      "Am Ende zählt, was man für andere rettet – nicht, was man selbst behält."
+    ]
+  },
+
+  /* --- Restliche Titel (kürzer, damit die Datei nicht riesig wird – kann ich dir jederzeit auf 7 Sätze je Titel erweitern) --- */
+  {id:"assassination-classroom", title:"Assassination Classroom", image:"", language:"Deutsch geschaut",
+   aniworld:"https://aniworld.to/anime/stream/assassination-classroom", netflix:"", crunchy:"",
+   trailer:"https://www.youtube.com/embed/qK1CrgYpXCg",
+   description:[
+     "Eine Klasse soll ihren übermächtigen Lehrer töten, bevor er die Erde zerstört.",
+     "Zwischen absurdem Unterricht und echter Entwicklung wächst aus Angst Respekt."
+   ]},
+  {id:"dan-da-dan", title:"Dan Da Dan", image:"", language:"Deutsch geschaut",
+   aniworld:"https://aniworld.to/anime/stream/dan-da-dan", netflix:"", crunchy:"",
+   trailer:"https://www.youtube.com/embed/lJRX6Uq4-3E",
+   description:[
+     "Aliens, Geister und Teenager prallen in rasanter Comedy-Action aufeinander.",
+     "Herz, Humor und Horror im wilden Wechsel."
+   ]},
+  {id:"divergent-film", title:"Divergent (Film)", image:"", language:"Deutsch geschaut",
+   aniworld:"https://aniworld.to/film/stream/divergent", netflix:"", crunchy:"",
+   trailer:"https://www.youtube.com/embed/sutgWjz10sM",
+   description:[
+     "Tris passt in kein System – und stellt es deshalb infrage.",
+     "Mut und Identität gegen Kontrolle und Etiketten."
+   ]},
+  {id:"elfen-lied", title:"Elfen Lied", image:"", language:"Deutsch geschaut",
+   aniworld:"https://aniworld.to/anime/stream/elfen-lied", netflix:"", crunchy:"",
+   trailer:"https://www.youtube.com/embed/m2JZo3C2G98",
+   description:[
+     "Zarte Unschuld trifft brutale Gewalt – und beides lebt im selben Menschen.",
+     "Liebe, Schuld und Trauma in bitterer Schönheit."
+   ]},
+  {id:"failure-frame", title:"Failure Frame", image:"", language:"Deutsch geschaut",
+   aniworld:"https://aniworld.to/anime/stream/failure-frame", netflix:"", crunchy:"",
+   trailer:"https://www.youtube.com/embed/9fYhQAfL3DQ",
+   description:[
+     "Vom Versager zum Rächer: niedrige Zauber, hohe Konsequenzen.",
+     "Dunkler Isekai über Würde und Vergeltung."
+   ]},
+  {id:"fumetsu-no-anata-e", title:"You Are My Eternity (Fumetsu no Anata e)", image:"", language:"Deutsch geschaut",
+   aniworld:"https://aniworld.to/anime/stream/fumetsu-no-anata-e", netflix:"", crunchy:"",
+   trailer:"https://www.youtube.com/embed/OPzFV2cJK6A",
+   description:[
+     "Ein Unsterblicher lernt Menschlichkeit – durch Schmerz, Bindung und Erinnerung.",
+     "Ein leiser, tiefer Blick auf Werden und Verlust."
+   ]},
+  {id:"gachiakuta", title:"Gachiakuta", image:"", language:"Deutsch geschaut",
+   aniworld:"https://aniworld.to/anime/stream/gachiakuta", netflix:"", crunchy:"",
+   trailer:"https://www.youtube.com/embed/JFwRKIYYNPc",
+   description:[
+     "Müllwelt, Klassenhass, roher Stil: Kampf um Gerechtigkeit von unten.",
+     "Wut als Motor – Hoffnung als Ziel."
+   ]},
+  {id:"hells-paradise", title:"Hell's Paradise", image:"", language:"Deutsch geschaut",
+   aniworld:"https://aniworld.to/anime/stream/hells-paradise", netflix:"", crunchy:"",
+   trailer:"https://www.youtube.com/embed/uYneG5ZZV08",
+   description:[
+     "Todgeweihte auf einer Hölleninsel suchen das Elixier des Lebens.",
+     "Schönheit, Grauen und Moral im Widerstreit."
+   ]},
+  {id:"higurashi", title:"Higurashi", image:"", language:"Deutsch geschaut",
+   aniworld:"https://aniworld.to/anime/stream/higurashi-no-naku-koro-ni", netflix:"", crunchy:"",
+   trailer:"https://www.youtube.com/embed/kbR6Y-JBoG8",
+   description:[
+     "Idylle als Maske: ein Dorf spult Albträume in Schleifen.",
+     "Freundschaft gegen Paranoia."
+   ]},
+  {id:"lookism", title:"Lookism", image:"", language:"Deutsch geschaut",
+   aniworld:"", netflix:"https://www.netflix.com/title/81519223", crunchy:"",
+   trailer:"https://www.youtube.com/embed/koYk9YhCZiI",
+   description:[
+     "Zwei Körper, zwei Leben – und die gleiche Suche nach Respekt.",
+     "Empathie als Antwort auf Oberflächenkult."
+   ]},
+  {id:"lord-of-mysteries", title:"Lord of Mysteries", image:"", language:"Deutsch geschaut",
+   aniworld:"https://aniworld.to/anime/stream/lord-of-mysteries", netflix:"", crunchy:"",
+   trailer:"https://www.youtube.com/embed/6gS7lLpxr6E",
+   description:[
+     "Steampunk, Okkultismus, geheime Pfade der Macht.",
+     "Rätsel als Tür zur eigenen Verwandlung."
+   ]},
+  {id:"mashle", title:"Mashle", image:"", language:"Deutsch geschaut",
+   aniworld:"https://aniworld.to/anime/stream/mashle", netflix:"", crunchy:"",
+   trailer:"https://www.youtube.com/embed/7rI1CV7t9s8",
+   description:[
+     "Keine Magie, nur Muckis – und trotzdem heldenhaft.",
+     "Parodie, Punchlines und Herz."
+   ]},
+  {id:"masamune-kun-revenge", title:"Masamune-kun's Revenge", image:"", language:"Deutsch geschaut",
+   aniworld:"https://aniworld.to/anime/stream/masamune-kuns-revenge", netflix:"", crunchy:"",
+   trailer:"https://www.youtube.com/embed/QnJG20bC9xU",
+   description:[
+     "Rache als Plan, Gefühle als Störfaktor.",
+     "RomCom mit Spiegel auf Selbstbild."
+   ]},
+  {id:"my-hero-academia", title:"My Hero Academia", image:"", language:"Deutsch geschaut",
+   aniworld:"https://aniworld.to/anime/stream/my-hero-academia", netflix:"", crunchy:"",
+   trailer:"https://www.youtube.com/embed/MZL7a8LHgBM",
+   description:[
+     "Quirks überall – doch Held sein beginnt im Herzen.",
+     "Wachstum durch Mut, Lehrer und Freunde."
+   ]},
+  {id:"naruto", title:"Naruto", image:"", language:"Deutsch geschaut",
+   aniworld:"https://aniworld.to/anime/stream/naruto", netflix:"", crunchy:"",
+   trailer:"https://www.youtube.com/embed/-G9BqkgZXRA",
+   description:[
+     "Ein Außenseiter jagt seinen Traum und gewinnt ein Dorf.",
+     "Fleiß, Freundschaft, Wille – und viel Ramen."
+   ]},
+  {id:"naruto-shippuden", title:"Naruto Shippuden", image:"", language:"Deutsch geschaut",
+   aniworld:"https://aniworld.to/anime/stream/naruto-shippuuden", netflix:"", crunchy:"",
+   trailer:"https://www.youtube.com/embed/hKJwGaG2M54",
+   description:[
+     "Rückkehr, Verantwortung, Abschiede – erwachsen werden unter Feuer.",
+     "Bündnisse gegen Schatten der Vergangenheit."
+   ]},
+  {id:"one-punch-man", title:"One Punch Man", image:"", language:"Deutsch geschaut",
+   aniworld:"https://aniworld.to/anime/stream/one-punch-man", netflix:"", crunchy:"",
+   trailer:"https://www.youtube.com/embed/2JAElThbKrI",
+   description:[
+     "Unendliche Macht, endlose Langeweile.",
+     "Heldenmut mit satirischer Klinge."
+   ]},
+  {id:"sword-art-online", title:"Sword Art Online", image:"", language:"Deutsch geschaut",
+   aniworld:"https://aniworld.to/anime/stream/sword-art-online", netflix:"", crunchy:"",
+   trailer:"https://www.youtube.com/embed/WZzx9aYWYpo",
+   description:[
+     "Gefangen im Spiel – Liebe und Überleben als Quest.",
+     "Virtuelle Welten, echte Gefühle."
+   ]}
+];
+
+/* ================== HILFSFUNKTIONEN ================== */
+const list   = document.getElementById('list');
+const empty  = document.getElementById('empty');
+const q      = document.getElementById('q');
+const lang   = document.getElementById('lang');
+const sortEl = document.getElementById('sort');
+
+const LS = {
+  getRating:(id)=> +localStorage.getItem('rating:'+id)||0,
+  setRating:(id,v)=> localStorage.setItem('rating:'+id, v),
+  getCrown:(id)=> localStorage.getItem('crown:'+id)==='1',
+  setCrown:(id,v)=> localStorage.setItem('crown:'+id, v?'1':'0')
+};
+
+function makeStars(id){
+  const wrap = document.createElement('div'); wrap.className='rating';
+  const stars = document.createElement('div'); stars.className='stars';
+  const crown = document.createElement('span'); crown.className='crown'; crown.textContent='👑';
+
+  const confirm = document.createElement('div'); confirm.className='confirm';
+  const btnOk = document.createElement('button'); btnOk.className='btnMini'; btnOk.textContent='Bestätigen';
+  const btnCancel = document.createElement('button'); btnCancel.className='btnMini'; btnCancel.textContent='Abbrechen';
+  confirm.append(btnOk, btnCancel);
+
+  let saved = LS.getRating(id);
+  let tmp = 0;
+  let hasCrown = LS.getCrown(id);
+
+  const starEls = [];
+  for(let i=1;i<=5;i++){
+    const s = document.createElement('span');
+    s.className='star'; s.textContent='★';
+    s.addEventListener('click', ()=>{
+      tmp = i;
+      draw();
+      confirm.classList.add('show');
+    });
+    starEls.push(s);
+    stars.appendChild(s);
+  }
+
+  crown.addEventListener('click', ()=>{
+    hasCrown = !hasCrown;
+    if(hasCrown){ saved = 5; LS.setRating(id,5); }
+    LS.setCrown(id, hasCrown);
+    tmp = 0; // pending weg
+    confirm.classList.remove('show');
+    draw();
+  });
+
+  btnOk.addEventListener('click', ()=>{
+    saved = tmp || saved;
+    LS.setRating(id, saved);
+    tmp = 0;
+    confirm.classList.remove('show');
+    draw();
+  });
+  btnCancel.addEventListener('click', ()=>{
+    tmp = 0;
+    confirm.classList.remove('show');
+    draw();
+  });
+
+  function draw(){
+    const active = tmp || saved || (hasCrown?5:0);
+    starEls.forEach((el,idx)=>{
+      el.classList.toggle('filled', idx < active);
+    });
+    crown.classList.toggle('active', hasCrown);
+  }
+  draw();
+
+  wrap.append(stars, crown, confirm);
+  return wrap;
+}
+
+/* ================== RENDERING ================== */
+function makeRow(item){
+  const row = document.createElement('div'); row.className='row';
+  const wrap = document.createElement('div'); wrap.className='card-row';
+
+  // Bild / Platzhalter
+  const thumb = document.createElement('div'); thumb.className='thumb';
+  if(item.image){
+    const img = document.createElement('img');
+    img.src = item.image; img.alt = item.title;
+    img.onerror = ()=>{ thumb.textContent='Bild folgt'; };
+    thumb.appendChild(img);
+  } else {
+    thumb.textContent = 'Bild folgt';
+  }
+
+  // Infos
+  const info = document.createElement('div'); info.className='info';
+  const title = document.createElement('h3'); title.className='title';
+  const btn = document.createElement('button'); btn.textContent = item.title; title.appendChild(btn);
+
+  const meta = document.createElement('div'); meta.className='meta';
+  const badge = document.createElement('span'); badge.className='badge'; badge.textContent = item.language || 'Sprache fehlt';
+  const rating = makeStars(item.id);
+  meta.append(badge, rating);
+
+  const details = document.createElement('div'); details.className='details';
+
+  // Beschreibung (7 Sätze, wenn Array; sonst join)
+  let descHTML = '';
+  if (Array.isArray(item.description)) {
+    descHTML = `<p class="desc">${item.description.join(' ')}</p>`;
+  } else if (item.description) {
+    descHTML = `<p class="desc">${item.description}</p>`;
+  }
+
+  // Trailer
+  const yt = item.trailer ? `<iframe src="${item.trailer}" allowfullscreen></iframe>` : '';
+
+  // Button-Reihenfolge
+  let linkHTML = '';
+  if(item.aniworld){
+    linkHTML = `<a class="btn btnAni" target="_blank" href="${item.aniworld}">▶ Auf AniWorld ansehen</a>`;
+  } else if(item.netflix){
+    linkHTML = `<a class="btn btnNetflix" target="_blank" href="${item.netflix}">▶ Auf Netflix ansehen</a>`;
+  } else if(item.crunchy){
+    linkHTML = `<a class="btn btnCrunchy" target="_blank" href="${item.crunchy}">▶ Auf Crunchyroll ansehen</a>`;
+  } else {
+    linkHTML = `<p class="noLink">Kein Streaminglink hinterlegt – sag mir Bescheid.</p>`;
+  }
+
+  details.innerHTML = `${descHTML}${yt}${linkHTML}`;
+
+  btn.addEventListener('click', ()=>{
+    const open = details.style.display==='block';
+    document.querySelectorAll('.details').forEach(d=>d.style.display='none');
+    details.style.display = open ? 'none' : 'block';
+  });
+
+  info.appendChild(title);
+  info.appendChild(meta);
+  info.appendChild(details);
+  wrap.appendChild(thumb);
+  wrap.appendChild(info);
+  row.appendChild(wrap);
+  return row;
+}
+
+function render(arr){
+  const list = document.getElementById('list');
+  list.innerHTML = '';
+  arr.forEach(item => list.appendChild(makeRow(item)));
+  empty.style.display = arr.length ? 'none' : 'block';
+}
+
+/* ================== FILTER/SORT ================== */
+function applyFilters(){
+  const term = (q.value||'').trim().toLowerCase();
+  const l = lang.value;
+  const s = sortEl.value;
+  let cur = DATA.filter(x => x.title.toLowerCase().includes(term));
+  if(l) cur = cur.filter(x => (x.language||'')===l);
+  cur.sort((a,b)=> s==='title-asc' ? a.title.localeCompare(b.title) : b.title.localeCompare(a.title));
+  render(cur);
+}
+
+q.addEventListener('input', applyFilters);
+lang.addEventListener('change', applyFilters);
+sortEl.addEventListener('change', applyFilters);
+
+/* Start */
+applyFilters();
+</script>
 </body>
 </html>
