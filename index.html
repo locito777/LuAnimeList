@@ -1,153 +1,121 @@
 <!DOCTYPE html>
 <html lang="de">
 <head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>LuAnimeList</title>
-<style>
-:root{--bg:#0b0b12;--card:#141424;--text:#fff;--muted:#b6b6c9;--violet:#8a2be2;}
-*{box-sizing:border-box}
-body{margin:0;background:#0a0a13;color:var(--text);font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial}
-.header{padding:24px 16px 8px}
-.header-inner{max-width:1100px;margin:0 auto;display:flex;align-items:center;gap:14px}
-.logo{width:60px;height:60px;object-fit:contain;display:block}
-.title{font-size:clamp(36px,6vw,64px);color:#fff;-webkit-text-stroke:3px var(--violet);margin:0}
-.subtitle{color:var(--muted);margin:4px 0 0}
-.container{max-width:1100px;margin:0 auto;padding:0 16px 64px}
-.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:16px}
-.card{background:var(--card);border:1px solid rgba(255,255,255,.06);border-radius:14px;padding:12px 16px;position:relative;display:flex;align-items:center;gap:12px}
-.card img.thumb{width:60px;height:80px;object-fit:cover;border-radius:6px;flex-shrink:0}
-.card h3{margin:0 0 4px;font-size:18px}
-.meta{font-size:12px;color:var(--muted);margin-bottom:4px}
-.badges{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px}
-.badge{font-size:11px;border:1px solid rgba(255,255,255,.2);color:var(--muted);padding:2px 6px;border-radius:999px}
-.crown{position:absolute;top:10px;right:10px;width:28px;height:28px;background:none;border:none;cursor:pointer;opacity:.9}
-.crown .fill{fill:transparent;transition:fill .25s}
-.crown .stroke{stroke:#c9c9d9;stroke-width:2;fill:none}
-.crown.active .fill{fill:#ffd54a}.crown.active .stroke{stroke:#ffbf00}
-.confetti{position:absolute;inset:0;pointer-events:none}
-.confetti i{position:absolute;width:8px;height:8px;opacity:0;animation:fall 2s ease-out forwards}
-@keyframes fall{0%{opacity:1;transform:translateY(-10px)}100%{opacity:0;transform:translateY(60px) rotate(360deg)}}
-.btn{--c:#444;background:var(--c);color:#fff;border:none;border-radius:10px;padding:10px 12px;margin:4px 8px 0 0;text-decoration:none;display:inline-block;font-weight:600;cursor:pointer}
-.footer{color:var(--muted);text-align:center;padding:24px 12px;font-size:12px}
-a{color:inherit;text-decoration:none}a:hover{text-decoration:underline}
-hr.sep{border:0;border-top:1px solid rgba(255,255,255,.08);margin:18px 0}
-#popup{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.7);display:none;align-items:center;justify-content:center;z-index:1000}
-#popup .box{background:#fff;color:#000;padding:20px;border-radius:10px;max-width:320px;text-align:center}
-#popup button{margin-top:10px;padding:6px 12px;border:none;border-radius:6px;background:#8a2be2;color:#fff;cursor:pointer}
-</style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Meine Anime Seite</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #1c1c1c;
+      color: #fff;
+      margin: 0;
+      padding: 0;
+    }
+
+    header {
+      text-align: center;
+      padding: 20px;
+      background: #333;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: 2rem;
+      color: #ff8800;
+    }
+
+    .anime-gallery {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 20px;
+      padding: 20px;
+    }
+
+    .anime-card {
+      background: #2c2c2c;
+      border-radius: 10px;
+      overflow: hidden;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+      transition: transform 0.2s;
+    }
+
+    .anime-card:hover {
+      transform: scale(1.05);
+    }
+
+    .anime-card img {
+      width: 100%;
+      height: auto;
+      display: block;
+    }
+
+    .anime-card h3 {
+      margin: 10px;
+      font-size: 1.1rem;
+      text-align: center;
+      color: #fff;
+    }
+  </style>
 </head>
 <body>
 
-<header class="header">
-  <div class="header-inner">
-    <!-- Dein Logo -->
-    <img src="logo.png" alt="Logo" class="logo" onerror="this.style.display='none'">
-    <div>
-      <h1 class="title">LuAnimeList</h1>
-      <p class="subtitle">Klick auf den Titel für Details • Krone = Favorit (Konfetti 🎉)</p>
-    </div>
-  </div>
-</header>
+  <header>
+    <h1>Meine Anime Galerie</h1>
+  </header>
 
-<div class="container"><div id="app"></div></div>
-<footer class="footer">© LuAnimeList</footer>
+  <div class="anime-gallery" id="gallery"></div>
 
-<!-- Popup für AniWorld Hinweis -->
-<div id="popup"><div class="box">
-  <p>⚠️ Aus rechtlichen Gründen können wir den Link nicht bereitstellen.<br>Suchen Sie bitte selbst nach „AniWorld + [Titel]“.</p>
-  <button onclick="closePopup()">OK</button>
-</div></div>
+  <script>
+    const DATA=[
+      {title:"Assassination Classroom", slug:"assassination-classroom", image:"images/images/IMG_0597.jpeg"},
+      {title:"Attack on Titan", slug:"attack-on-titan", image:"images/images/IMG_0598.png"},
+      {title:"Chainsaw Man", slug:"chainsaw-man", image:"images/images/IMG_0599.jpeg"},
+      {title:"Charlotte", slug:"charlotte", image:"images/images/IMG_0602.jpeg"},
+      {title:"Dan Da Dan", slug:"dan-da-dan", image:"images/images/IMG_0603.jpeg"},
+      {title:"Demon Slayer", slug:"demon-slayer", image:"images/images/IMG_0604.jpeg"},
+      {title:"Dr. STONE", slug:"dr-stone", image:"images/images/IMG_0605.jpeg"},
+      {title:"Elfen Lied", slug:"elfen-lied", image:"images/images/IMG_0607.png"},
+      {title:"Failure Frame", slug:"failure-frame", image:"images/images/IMG_0608.jpeg"},
+      {title:"Gachiakuta", slug:"gachiakuta", image:"images/images/IMG_0610.jpeg"},
+      {title:"Hell’s Paradise", slug:"hells-paradise", image:"images/images/IMG_0611.jpeg"},
+      {title:"Higurashi", slug:"higurashi", image:"images/images/IMG_0612.jpeg"},
+      {title:"Junji Ito Collection", slug:"junji-ito-collection", image:"images/images/IMG_0613.jpeg"},
+      {title:"Lookism", slug:"lookism", image:"images/images/IMG_0615.jpeg"},
+      {title:"Lord of Mysteries", slug:"lord-of-mysteries", image:"images/images/IMG_0616.jpeg"},
+      {title:"Masamune-kun’s Revenge", slug:"masamune-kun-revenge", image:"images/images/IMG_0617.jpeg"},
+      {title:"Mashle", slug:"mashle", image:"images/images/IMG_0618.jpeg"},
+      {title:"Mushoku Tensei", slug:"mushoku-tensei", image:"images/images/IMG_0619.jpeg"},
+      {title:"My Hero Academia", slug:"my-hero-academia", image:"images/images/IMG_0622.jpeg"},
+      {title:"Naruto Shippuden", slug:"naruto-shippuden", image:"images/images/IMG_0624.jpeg"},
+      {title:"One Punch Man", slug:"one-punch-man", image:"images/images/IMG_0625.jpeg"},
+      {title:"Reborn as a Vending Machine", slug:"reborn-as-a-vending-machine", image:"images/images/IMG_0626.jpeg"},
+      {title:"Solo Leveling", slug:"solo-leveling", image:"images/images/IMG_0627.jpeg"},
+      {title:"Sword Art Online", slug:"sao", image:"images/images/IMG_0600.png"},
+      {title:"The Seven Deadly Sins", slug:"seven-deadly-sins", image:"images/images/IMG_0538.jpeg"},
+      {title:"Tokyo Ghoul", slug:"tokyo-ghoul", image:"images/images/IMG_0447.webp"},
+      {title:"Tokyo Revengers", slug:"tokyo-revengers", image:"images/images/IMG_0448.png"},
+      {title:"Wind Breaker", slug:"wind-breaker", image:"images/images/IMG_0609.webp"},
+      {title:"You Are My Eternity", slug:"you-are-my-eternity", image:"images/images/IMG_0614.webp"}
+    ];
 
-<script>
-const COLORS={"Crunchyroll":"#ff8800","Netflix":"#e50914","Amazon Prime":"#1f6feb","Disney+":"#ff69b4","AniWorld":"#8a2be2"};
+    const gallery = document.getElementById("gallery");
+    DATA.forEach(anime => {
+      const card = document.createElement("div");
+      card.className = "anime-card";
 
-/* ===== Anime-Datenbank (alphabetisch mit Bildnamen) ===== */
-const DATA=[
-  {title:"Assassination Classroom", slug:"assassination-classroom", image:"images/images/IMG_0597.jpeg"},
-  {title:"Attack on Titan", slug:"attack-on-titan", image:"images/images/IMG_0598.png"},
-  {title:"Chainsaw Man", slug:"chainsaw-man", image:"images/images/IMG_0599.jpeg"},
-  {title:"Charlotte", slug:"charlotte", image:"images/images/IMG_0602.jpeg"},
-  {title:"Dan Da Dan", slug:"dan-da-dan", image:"images/images/IMG_0603.jpeg"},
-  {title:"Demon Slayer", slug:"demon-slayer", image:"images/images/IMG_0604.jpeg"},
-  {title:"Dr. STONE", slug:"dr-stone", image:"images/images/IMG_0605.jpeg"},
-  {title:"Elfen Lied", slug:"elfen-lied", image:"images/images/IMG_0607.png"},
-  {title:"Failure Frame", slug:"failure-frame", image:"images/images/IMG_0608.jpeg"},
-  {title:"Gachiakuta", slug:"gachiakuta", image:"images/images/IMG_0610.jpeg"},
-  {title:"Hell’s Paradise", slug:"hells-paradise", image:"images/images/IMG_0611.jpeg"},
-  {title:"Higurashi", slug:"higurashi", image:"images/images/IMG_0612.jpeg"},
-  {title:"Junji Ito Collection", slug:"junji-ito-collection", image:"images/images/IMG_0613.jpeg"},
-  {title:"Lookism", slug:"lookism", image:"images/images/IMG_0615.jpeg"},
-  {title:"Lord of Mysteries", slug:"lord-of-mysteries", image:"images/images/IMG_0616.jpeg"},
-  {title:"Masamune-kun’s Revenge", slug:"masamune-kun-revenge", image:"images/images/IMG_0617.jpeg"},
-  {title:"Mashle", slug:"mashle", image:"images/images/IMG_0618.jpeg"},
-  {title:"Mushoku Tensei", slug:"mushoku-tensei", image:"images/images/IMG_0619.jpeg"},
-  {title:"My Hero Academia", slug:"my-hero-academia", image:"images/images/IMG_0622.jpeg"},
-  {title:"Naruto Shippuden", slug:"naruto-shippuden", image:"images/images/IMG_0624.jpeg"},
-  {title:"One Punch Man", slug:"one-punch-man", image:"images/images/IMG_0625.jpeg"},
-  {title:"Reborn as a Vending Machine", slug:"reborn-as-a-vending-machine", image:"images/images/IMG_0626.jpeg"},
-  {title:"Solo Leveling", slug:"solo-leveling", image:"images/images/IMG_0627.jpeg"},
-  {title:"Sword Art Online", slug:"sao", image:"images/images/IMG_0600.png"},
-  {title:"The Seven Deadly Sins", slug:"seven-deadly-sins", image:"images/images/IMG_0538.jpeg"},
-  {title:"Tokyo Ghoul", slug:"tokyo-ghoul", image:"images/images/IMG_0447.webp"},
-  {title:"Tokyo Revengers", slug:"tokyo-revengers", image:"images/images/IMG_0448.png"},
-  {title:"Wind Breaker", slug:"wind-breaker", image:"images/images/IMG_0609.webp"},
-  {title:"You Are My Eternity", slug:"you-are-my-eternity", image:"images/images/IMG_0614.webp"}
-];
+      const img = document.createElement("img");
+      img.src = anime.image;
+      img.alt = anime.title;
 
-/* ===== Router ===== */
-const getSlug=()=>new URLSearchParams(location.search).get("slug");
+      const title = document.createElement("h3");
+      title.textContent = anime.title;
 
-/* ===== Krone + Konfetti ===== */
-function confettiBurst(root){
-  const colors=['#ffd54a','#ff7a7a','#7ae0ff','#9d7aff','#7aff9a','#ff7ae1'];
-  for(let i=0;i<40;i++){const p=document.createElement('i');p.style.left=(Math.random()*160+10)+'px';p.style.top=(Math.random()*20)+'px';p.style.background=colors[Math.floor(Math.random()*colors.length)];root.appendChild(p);setTimeout(()=>p.remove(),2100);}
-}
-function setupCrowns(){document.querySelectorAll('.crown').forEach(c=>{c.addEventListener('click',()=>{c.classList.toggle('active');const root=c.closest('.card').querySelector('.confetti');if(root) confettiBurst(root);});});}
+      card.appendChild(img);
+      card.appendChild(title);
+      gallery.appendChild(card);
+    });
+  </script>
 
-/* ===== Helpers ===== */
-function ytEmbed(url){if(!url) return "";const m=url.match(/youtu\.be\/([A-Za-z0-9_-]+)/)||url.match(/[?&]v=([A-Za-z0-9_-]+)/);const id=m?m[1]:"";if(!id) return "";return `<iframe width="100%" height="360" src="https://www.youtube-nocookie.com/embed/${id}" allowfullscreen></iframe>`;}
-function btn(p){if(p.name==="AniWorld"){return `<button class="btn" style="--c:${COLORS["AniWorld"]}" onclick="openPopup()">AniWorld ❗</button>`;}return `<a class="btn" style="--c:${COLORS[p.name]||'#444'}" href="${p.url}" target="_blank">${p.name}</a>`;}
-
-/* ===== Index ===== */
-function renderIndex(){
-  const cards=DATA.map(a=>{
-    const badges=a.genres.map(g=>`<span class="badge">${g}</span>`).join("");
-    return `<div class="card"><div class="confetti"></div>
-      <button class="crown"><svg viewBox="0 0 24 24"><path class="fill" d="M3 19h18v2H3zM5 9l4 3 3-6 3 6 4-3 1 8H4z"/><path class="stroke" d="M4 17h16l-1-8-4 3-3-6-3 6-4-3z"/></svg></button>
-      <img class="thumb" src="${a.image}" alt="${a.title}" onerror="this.style.display='none'">
-      <div><h3><a href="?slug=${encodeURIComponent(a.slug)}">${a.title}</a></h3><div class="meta">${a.genres.join(", ")}</div><div class="badges">${badges}</div></div>
-    </div>`;
-  }).join("");
-  document.getElementById("app").innerHTML=`<div class="grid">${cards}</div>`;
-  setupCrowns();
-}
-
-/* ===== Detail ===== */
-function renderDetail(slug){
-  const a=DATA.find(x=>x.slug===slug);
-  if(!a){renderIndex();return;}
-  const trailer=ytEmbed(a.trailer);
-  const links=(a.providers||[]).map(btn).join("");
-  const html=`<div class="card" style="flex-direction:column;align-items:flex-start">
-    <h2>${a.title}</h2>
-    <div class="meta">Genres: ${a.genres.join(", ")}</div>
-    ${trailer?`<hr class="sep"><div>${trailer}</div>`:""}
-    ${links?`<hr class="sep"><div>${links}</div>`:""}
-    <hr class="sep"><div><a href="index.html">← Zurück</a></div>
-  </div>`;
-  document.getElementById("app").innerHTML=html;
-}
-
-/* ===== Init ===== */
-document.addEventListener("DOMContentLoaded",()=>{
-  const slug=getSlug();
-  slug?renderDetail(slug):renderIndex();
-});
-
-/* ===== Popup ===== */
-function openPopup(){document.getElementById("popup").style.display="flex";}
-function closePopup(){document.getElementById("popup").style.display="none";}
-</script>
 </body>
 </html>
