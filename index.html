@@ -1,141 +1,211 @@
-<<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="de">
 <head>
-  <meta charset="utf-8">
+  <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Meine Anime Watchlist</title>
+  <title>📺 Meine geschauten Anime</title>
   <style>
-    :root {
-      --bg:#0f172a;      /* Seitenhintergrund */
-      --card:#1e293b;    /* Karten-Hintergrund */
-      --fg:#f1f5f9;      /* Textfarbe */
-      --muted:#94a3b8;   /* Untertitel */
-      --accent:#22c55e;  /* Buttons, Links */
-      --danger:#ef4444;  /* Warnungen */
-      --border:#334155;  /* Rahmen */
-    }
-
     body {
+      font-family: Arial, sans-serif;
+      background-color: #0f172a;
+      color: white;
       margin: 0;
-      font-family: system-ui, sans-serif;
-      background: var(--bg);
-      color: var(--fg);
-      line-height: 1.5;
+      padding: 0;
     }
-
     header {
       text-align: center;
       padding: 20px;
-      background: var(--card);
-      border-bottom: 1px solid var(--border);
+      background: #1e293b;
     }
-
     h1 {
       margin: 0;
     }
-
+    .container {
+      padding: 20px;
+      max-width: 900px;
+      margin: auto;
+    }
     .card {
-      max-width: 800px;
-      margin: 20px auto;
-      padding: 16px;
-      background: var(--card);
-      border-radius: 12px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.5);
-    }
-
-    .anime-item {
-      padding: 14px;
-      background: var(--card);
-      border: 1px solid var(--border);
+      background: #1e293b;
       border-radius: 10px;
-      margin-bottom: 12px;
-      transition: transform 0.2s, background 0.2s;
+      padding: 15px;
+      margin-bottom: 15px;
+      cursor: pointer;
     }
-
-    .anime-item:hover {
-      transform: translateY(-2px);
-      background: #243045;
+    .card:hover {
+      background: #334155;
     }
-
-    .anime-item h3 {
-      margin: 0 0 8px 0;
+    .title {
+      font-size: 20px;
+      font-weight: bold;
     }
-
-    .badge {
+    .details {
+      display: none;
+      margin-top: 10px;
+    }
+    .btn {
       display: inline-block;
-      font-size: 12px;
-      padding: 4px 8px;
-      border-radius: 6px;
-      background: var(--muted);
-      color: var(--bg);
-      margin-bottom: 8px;
+      padding: 10px 15px;
+      background: violet;
+      color: white;
+      text-decoration: none;
+      border-radius: 5px;
+      margin-top: 10px;
     }
-
-    .desc {
-      font-size: 14px;
-      margin-bottom: 8px;
-      color: var(--fg);
-    }
-
     iframe {
       width: 100%;
-      height: 200px;
-      border-radius: 8px;
-      margin-bottom: 8px;
-    }
-
-    a {
-      display: inline-block;
-      margin-top: 6px;
-      text-decoration: none;
-      color: white;
-      background: var(--accent);
-      padding: 6px 12px;
-      border-radius: 6px;
-    }
-
-    a:hover {
-      background: #16a34a;
-    }
-
-    footer {
-      text-align: center;
-      padding: 20px;
-      font-size: 13px;
-      color: var(--muted);
+      height: 300px;
+      border: none;
+      border-radius: 10px;
+      margin-top: 10px;
     }
   </style>
 </head>
 <body>
-
   <header>
     <h1>📺 Meine geschauten Anime</h1>
   </header>
+  <div class="container" id="animeList"></div>
 
-  <main class="card">
+  <script>
+    const animes = [
+      {
+        title: "Assassination Classroom",
+        description: "Eine Klasse von Schülern muss ihren außerirdischen Lehrer töten, bevor er die Welt zerstört. (Deutsch geschaut)",
+        trailer: "https://www.youtube.com/embed/2yJgwwDHOJg?hl=de",
+        link: "https://aniworld.to/anime/stream/assassination-classroom"
+      },
+      {
+        title: "Attack on Titan",
+        description: "Menschen kämpfen in einer von Mauern umgebenen Welt gegen riesige Titanen. (Deutsch geschaut)",
+        trailer: "https://www.youtube.com/embed/MGRm4IzK1SQ?hl=de",
+        link: "https://aniworld.to/anime/stream/attack-on-titan"
+      },
+      {
+        title: "Chainsaw Man",
+        description: "Ein Junge verschmilzt mit seinem Teufelshund und wird zu Chainsaw Man. (Deutsch geschaut)",
+        trailer: "https://www.youtube.com/embed/q15CRdE5Bv0?hl=de",
+        link: "https://aniworld.to/anime/stream/chainsaw-man"
+      },
+      {
+        title: "Charlotte",
+        description: "Schüler mit besonderen Kräften erleben dramatische Schicksale. (Deutsch geschaut)",
+        trailer: "https://www.youtube.com/embed/9jdY9n9sj_U?hl=de",
+        link: "https://aniworld.to/anime/stream/charlotte"
+      },
+      {
+        title: "Dan Da Dan",
+        description: "Ein übernatürlicher Mix aus Action, Geistern und Außerirdischen. (Deutsch geschaut)",
+        trailer: "https://www.youtube.com/embed/MsdQw5KPJ6E?hl=de",
+        link: "https://aniworld.to/anime/stream/dan-da-dan"
+      },
+      {
+        title: "Demon Slayer",
+        description: "Ein Junge kämpft gegen Dämonen, um seine Schwester zu retten. (Deutsch geschaut)",
+        trailer: "https://www.youtube.com/embed/VQGCKyvzIM4?hl=de",
+        link: "https://aniworld.to/anime/stream/demon-slayer-kimetsu-no-yaiba"
+      },
+      {
+        title: "Divergent (Film)",
+        description: "Eine dystopische Gesellschaft wird von Mut, Intelligenz und Loyalität geprägt. (Deutsch geschaut)",
+        trailer: "https://www.youtube.com/embed/Aw7Eln_xuWc?hl=de",
+        link: "https://aniworld.to/movie/stream/divergent"
+      },
+      {
+        title: "Dr. STONE",
+        description: "Nach der Versteinerung der Menschheit beginnt ein genialer Junge die Welt neu aufzubauen. (Deutsch geschaut)",
+        trailer: "https://www.youtube.com/embed/ydVYzbj5rcc?hl=de",
+        link: "https://aniworld.to/anime/stream/dr-stone"
+      },
+      {
+        title: "Elfen Lied",
+        description: "Ein Mädchen mit tödlichen Kräften flieht aus dem Labor. (Deutsch geschaut)",
+        trailer: "https://www.youtube.com/embed/wj3w6X0r6hE?hl=de",
+        link: "https://aniworld.to/anime/stream/elfen-lied"
+      },
+      {
+        title: "Hell's Paradise",
+        description: "Sträflinge werden auf eine mysteriöse Insel geschickt, um das Elixier des Lebens zu finden. (Deutsch geschaut)",
+        trailer: "https://www.youtube.com/embed/JQmYBHz9xRQ?hl=de",
+        link: "https://aniworld.to/anime/stream/hells-paradise"
+      },
+      {
+        title: "Lookism",
+        description: "Ein Junge wacht in einem perfekten Körper auf und lebt zwei Leben. (Deutsch geschaut)",
+        trailer: "https://www.youtube.com/embed/7CytzDlfJmY?hl=de",
+        link: "https://aniworld.to/anime/stream/lookism"
+      },
+      {
+        title: "Mashle",
+        description: "Ein Junge ohne Magie lebt in einer Welt voller Magier. (Deutsch geschaut)",
+        trailer: "https://www.youtube.com/embed/jRb9U_HV6zA?hl=de",
+        link: "https://aniworld.to/anime/stream/mashle"
+      },
+      {
+        title: "Mushoku Tensei",
+        description: "Ein Mann wird in einer Fantasy-Welt wiedergeboren. (Deutsch geschaut)",
+        trailer: "https://www.youtube.com/embed/6xKQqgm01yU?hl=de",
+        link: "https://aniworld.to/anime/stream/mushoku-tensei-isekai-ittara-honki-dasu"
+      },
+      {
+        title: "Naruto",
+        description: "Die Geschichte des jungen Ninjas Naruto. (Deutsch geschaut)",
+        trailer: "https://www.youtube.com/embed/-G9BqkgZXRA?hl=de",
+        link: "https://aniworld.to/anime/stream/naruto"
+      },
+      {
+        title: "Naruto Shippuden",
+        description: "Die Fortsetzung von Narutos Reise als Ninja. (Deutsch geschaut)",
+        trailer: "https://www.youtube.com/embed/dcq4Ic4OF-8?hl=de",
+        link: "https://aniworld.to/anime/stream/naruto-shippuden"
+      },
+      {
+        title: "One Punch Man",
+        description: "Saitama besiegt jeden Gegner mit nur einem Schlag. (Deutsch geschaut)",
+        trailer: "https://www.youtube.com/embed/2JAElThbKrI?hl=de",
+        link: "https://aniworld.to/anime/stream/one-punch-man"
+      },
+      {
+        title: "Sword Art Online",
+        description: "Spieler werden in einer virtuellen Welt gefangen. (Deutsch geschaut)",
+        trailer: "https://www.youtube.com/embed/WZzx9aYWYpo?hl=de",
+        link: "https://aniworld.to/anime/stream/sword-art-online"
+      },
+      {
+        title: "Tokyo Ghoul",
+        description: "Ein Student verwandelt sich in einen Halb-Ghoul. (Deutsch geschaut)",
+        trailer: "https://www.youtube.com/embed/vGuQeQsoRgU?hl=de",
+        link: "https://aniworld.to/anime/stream/tokyo-ghoul"
+      }
+    ];
 
-    <!-- Beispiel Anime -->
-    <div class="anime-item">
-      <span class="badge">Deutsch geschaut</span>
-      <h3>Assassination Classroom</h3>
-      <p class="desc">Ein geheimnisvoller Lehrer mit übermenschlichen Kräften unterrichtet eine Klasse – und die Schüler sollen ihn töten, bevor er die Erde zerstört.</p>
-      <iframe src="https://www.youtube.com/embed/mz-K2bZ2n6M" frameborder="0" allowfullscreen></iframe>
-      <a href="https://aniworld.to/anime/stream/assassination-classroom" target="_blank">🔗 Hier ansehen</a>
-    </div>
+    const listContainer = document.getElementById("animeList");
 
-    <div class="anime-item">
-      <span class="badge">Deutsch geschaut</span>
-      <h3>The Seven Deadly Sins</h3>
-      <p class="desc">Eine Gruppe von legendären Rittern kämpft gegen Dämonen und rettet das Königreich.</p>
-      <iframe src="https://www.youtube.com/embed/wxcvbL6o55M" frameborder="0" allowfullscreen></iframe>
-      <a href="https://aniworld.to/anime/stream/the-seven-deadly-sins" target="_blank">🔗 Hier ansehen</a>
-    </div>
+    animes.forEach(anime => {
+      const card = document.createElement("div");
+      card.className = "card";
 
-  </main>
+      const title = document.createElement("div");
+      title.className = "title";
+      title.textContent = anime.title;
 
-  <footer>
-    © 2025 Meine Anime Watchlist
-  </footer>
+      const details = document.createElement("div");
+      details.className = "details";
+      details.innerHTML = `
+        <p>${anime.description}</p>
+        <iframe src="${anime.trailer}" allowfullscreen></iframe><br>
+        <a href="${anime.link}" target="_blank" class="btn">Auf AniWorld ansehen</a>
+      `;
 
+      card.appendChild(title);
+      card.appendChild(details);
+
+      title.addEventListener("click", () => {
+        details.style.display = details.style.display === "block" ? "none" : "block";
+      });
+
+      listContainer.appendChild(card);
+    });
+  </script>
 </body>
 </html>
