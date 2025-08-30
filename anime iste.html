@@ -1,87 +1,169 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="de">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Meine Anime Liste</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>📺 Meine Anime Watchlist</title>
+  <meta name="description" content="Anime-Liste mit Detailansicht, deutschem Trailer und AniWorld-Link.">
   <style>
-    body {
-      background-color: #0f172a;
-      color: white;
-      font-family: Arial, sans-serif;
-      margin: 0;
-      padding: 20px;
+    :root{
+      --bg:#0f172a;
+      --card:#1e293b;
+      --fg:#f1f5f9;
+      --muted:#94a3b8;
+      --border:#334155;
+      --violet:#7c3aed;
+      --violet-dark:#6d28d9;
+      --radius:12px;
+      --shadow:0 6px 16px rgba(0,0,0,.35);
+      --thumbW:120px; --thumbH:160px;
     }
-
-    h1 {
-      text-align: center;
-      margin-bottom: 20px;
-    }
-
-    .card {
-      background-color: #1e293b;
-      border-radius: 10px;
-      padding: 15px;
-      margin: 15px 0;
-      box-shadow: 0 4px 6px rgba(0,0,0,0.3);
-    }
-
-    .card img {
-      width: 100%;
-      max-width: 300px;
-      border-radius: 8px;
-      display: block;
-      margin-bottom: 10px;
-    }
-
-    .card iframe {
-      width: 100%;
-      max-width: 400px;
-      height: 220px;
-      border-radius: 8px;
-      margin-top: 10px;
-    }
-
-    .card a {
-      color: #38bdf8;
-      text-decoration: none;
-      font-weight: bold;
-    }
-
-    .card a:hover {
-      text-decoration: underline;
-    }
-
-    .watched {
-      display: inline-block;
-      margin-top: 10px;
-      font-weight: bold;
-      color: #22c55e;
-    }
+    *{box-sizing:border-box}
+    body{margin:0;background:var(--bg);color:var(--fg);font:16px/1.5 system-ui,Segoe UI,Roboto,Arial,sans-serif}
+    .header{position:sticky;top:0;z-index:5;background:var(--card);border-bottom:1px solid var(--border);padding:16px}
+    h1{margin:0;font-size:20px}
+    .container{max-width:950px;margin:16px auto;padding:0 12px}
+    .card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow);padding:16px;margin:12px 0}
+    .controls{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:12px}
+    input[type="search"],select{flex:1;min-width:180px;padding:10px;border-radius:8px;border:1px solid var(--border);background:#0b1220;color:var(--fg)}
+    .list{display:flex;flex-direction:column;gap:10px}
+    .row{border:1px solid var(--border);border-radius:10px;background:#1a2436;transition:transform .15s}
+    .row:hover{transform:translateY(-2px);background:#223149}
+    .card-row{display:flex;gap:12px;padding:12px}
+    .thumb{flex:0 0 var(--thumbW);width:var(--thumbW);height:var(--thumbH);border:1px solid var(--border);border-radius:8px;background:#0b1220;display:flex;align-items:center;justify-content:center;color:var(--muted);font-size:12px;overflow:hidden}
+    .thumb img{width:100%;height:100%;object-fit:cover;display:block}
+    .info{flex:1;min-width:0}
+    .title{margin:0 0 6px 0;font-size:18px;font-weight:800}
+    .title button{all:unset;cursor:pointer;color:#fff}
+    .title button:hover{text-decoration:underline}
+    .badge{display:inline-block;background:rgba(255,255,255,.08);color:var(--muted);padding:4px 8px;border-radius:6px;font-size:12px}
+    .details{display:none;padding:8px 0 4px}
+    .desc{margin:6px 0 10px 0}
+    iframe{width:100%;height:230px;border:0;border-radius:8px;margin:8px 0}
+    .btn{display:inline-block;background:var(--violet);color:#fff;text-decoration:none;padding:10px 14px;border-radius:8px;font-weight:700;box-shadow:0 4px 12px rgba(124,58,237,.4);transition:.2s}
+    .btn:hover{background:var(--violet-dark);transform:translateY(-2px)}
+    .footer{margin:10px 0;text-align:center;color:var(--muted);font-size:13px}
   </style>
 </head>
 <body>
-  <h1>📺 Meine geschauten Anime</h1>
+  <div class="header"><h1>📺 Meine geschauten Anime</h1></div>
 
-  <!-- Anime Karte -->
-  <div class="card">
-    <h2>Assassination Classroom</h2>
-    <img src="assassination.jpg" alt="Assassination Classroom">
-    <p>Eine Gruppe Schüler muss ihren Alien-Lehrer töten, bevor er die Erde zerstört.</p>
-    <iframe src="https://www.youtube.com/embed/2LzWb3pqAYI" frameborder="0" allowfullscreen></iframe>
-    <p><a href="https://aniworld.to/anime/stream/assassination-classroom">Hier auf Deutsch schauen</a></p>
-    <span class="watched">Deutsch geschaut ✅</span>
+  <div class="container">
+    <div class="card">
+      <div class="controls">
+        <input id="q" type="search" placeholder="Suche nach Titel …" aria-label="Suche">
+        <select id="lang">
+          <option value="">Alle Sprachen</option>
+          <option value="Deutsch geschaut">Deutsch geschaut</option>
+        </select>
+        <select id="sort">
+          <option value="title-asc">Titel A–Z</option>
+          <option value="title-desc">Titel Z–A</option>
+        </select>
+      </div>
+      <div id="list" class="list" aria-live="polite"></div>
+      <div id="empty" class="footer" style="display:none">Keine Treffer.</div>
+      <div class="footer">Tipp: Titel antippen → Beschreibung, <b>deutscher Trailer</b> & <b>violetter AniWorld-Button</b>. Links ist Platz für dein Bild.</div>
+    </div>
   </div>
 
-  <!-- Beispiel zweite Karte -->
-  <div class="card">
-    <h2>The Seven Deadly Sins</h2>
-    <img src="seven-deadly-sins.jpg" alt="The Seven Deadly Sins">
-    <p>Eine Gruppe von legendären Rittern kämpft gegen das Königreich und dunkle Mächte.</p>
-    <iframe src="https://www.youtube.com/embed/wxcvbL6o55M" frameborder="0" allowfullscreen></iframe>
-    <p><a href="https://aniworld.to/anime/stream/the-seven-deadly-sins">Hier auf Deutsch schauen</a></p>
-    <span class="watched">Deutsch geschaut ✅</span>
-  </div>
+  <script>
+    /* ==== Daten: ALLE bekannten Titel. Sprache überall: Deutsch geschaut. 
+       image: lege später eine Datei im Ordner images/ ab (z.B. images/seven-deadly-sins.jpg).
+       Wenn das Bild fehlt, bleibt links der Platzhalter "Bild folgt". ==== */
+    const DATA = [
+      {id:"assassination-classroom",title:"Assassination Classroom",image:"images/assassination.jpg",language:"Deutsch geschaut",watch_url:"https://aniworld.to/anime/stream/assassination-classroom",description:"Eine Klasse soll ihren übermächtigen Lehrer töten, bevor er die Erde zerstört.",trailer_url:"https://www.youtube.com/embed/qK1CrgYpXCg"},
+      {id:"attack-on-titan",title:"Attack on Titan",image:"images/aot.jpg",language:"Deutsch geschaut",watch_url:"https://aniworld.to/anime/stream/attack-on-titan",description:"Die Menschheit kämpft hinter Mauern gegen die gefräßigen Titanen ums Überleben.",trailer_url:"https://www.youtube.com/embed/W7sT1dpCmUo"},
+      {id:"chainsaw-man",title:"Chainsaw Man",image:"images/chainsaw-man.jpg",language:"Deutsch geschaut",watch_url:"https://aniworld.to/anime/stream/chainsaw-man",description:"Denji fusioniert mit Pochita und wird zum Chainsaw Man.",trailer_url:"https://www.youtube.com/embed/KkMOPchvXcA"},
+      {id:"charlotte",title:"Charlotte",image:"images/charlotte.jpg",language:"Deutsch geschaut",watch_url:"https://aniworld.to/anime/stream/charlotte",description:"Jugendliche mit kurzlebigen Superkräften – und deren Folgen.",trailer_url:"https://www.youtube.com/embed/oVjIj-d2rY0"},
+      {id:"dan-da-dan",title:"Dan Da Dan",image:"images/dandadan.jpg",language:"Deutsch geschaut",watch_url:"https://aniworld.to/anime/stream/dan-da-dan",description:"Aliens, Geister und Teenager – abgedrehter Mix aus Action & Comedy.",trailer_url:"https://www.youtube.com/embed/lJRX6Uq4-3E"},
+      {id:"demon-slayer",title:"Demon Slayer (Kimetsu no Yaiba)",image:"images/demon-slayer.jpg",language:"Deutsch geschaut",watch_url:"https://aniworld.to/anime/stream/demon-slayer",description:"Tanjiro wird Dämonenjäger, um seine Schwester zu retten.",trailer_url:"https://www.youtube.com/embed/VQGCKyvzIM4"},
+      {id:"divergent-film",title:"Divergent (Film)",image:"images/divergent.jpg",language:"Deutsch geschaut",watch_url:"https://aniworld.to/film/stream/divergent",description:"In einer Fraktionen-Gesellschaft wird Tris zur Rebellin.",trailer_url:"https://www.youtube.com/embed/sutgWjz10sM"},
+      {id:"dr-stone",title:"Dr. STONE",image:"images/dr-stone.jpg",language:"Deutsch geschaut",watch_url:"https://aniworld.to/anime/stream/dr-stone",description:"Nach der Versteinerung baut Senku die Zivilisation neu auf.",trailer_url:"https://www.youtube.com/embed/owJjX5Y6auE"},
+      {id:"elfen-lied",title:"Elfen Lied",image:"images/elfen-lied.jpg",language:"Deutsch geschaut",watch_url:"https://aniworld.to/anime/stream/elfen-lied",description:"Die Mutantin Lucy entfesselt ihre tödlichen Kräfte.",trailer_url:"https://www.youtube.com/embed/m2JZo3C2G98"},
+      {id:"failure-frame",title:"Failure Frame",image:"images/failure-frame.jpg",language:"Deutsch geschaut",watch_url:"https://aniworld.to/anime/stream/failure-frame",description:"Verraten in einer anderen Welt – und auf Rache aus.",trailer_url:"https://www.youtube.com/embed/9fYhQAfL3DQ"},
+      {id:"fumetsu-no-anata-e",title:"You Are My Eternity (Fumetsu no Anata e)",image:"images/fumetsu.jpg",language:"Deutsch geschaut",watch_url:"https://aniworld.to/anime/stream/fumetsu-no-anata-e",description:"Ein unsterbliches Wesen lernt durch Menschen zu fühlen.",trailer_url:"https://www.youtube.com/embed/OPzFV2cJK6A"},
+      {id:"gachiakuta",title:"Gachiakuta",image:"images/gachiakuta.jpg",language:"Deutsch geschaut",watch_url:"https://aniworld.to/anime/stream/gachiakuta",description:"Ein Junge kämpft in einer Welt voller Müll und Ungerechtigkeit.",trailer_url:"https://www.youtube.com/embed/JFwRKIYYNPc"},
+      {id:"hells-paradise",title:"Hell's Paradise",image:"images/hells-paradise.jpg",language:"Deutsch geschaut",watch_url:"https://aniworld.to/anime/stream/hells-paradise",description:"Gefangene suchen auf einer tödlichen Insel das Elixier des Lebens.",trailer_url:"https://www.youtube.com/embed/uYneG5ZZV08"},
+      {id:"higurashi",title:"Higurashi",image:"images/higurashi.jpg",language:"Deutsch geschaut",watch_url:"https://aniworld.to/anime/stream/higurashi-no-naku-koro-ni",description:"Ein Dorf, dunkle Geheimnisse – und blutige Zeitschleifen.",trailer_url:"https://www.youtube.com/embed/kbR6Y-JBoG8"},
+      {id:"lookism",title:"Lookism",image:"images/lookism.jpg",language:"Deutsch geschaut",watch_url:"https://aniworld.to/anime/stream/lookism",description:"Ein Schüler wechselt zwischen zwei Körpern – dick und attraktiv.",trailer_url:"https://www.youtube.com/embed/koYk9YhCZiI"},
+      {id:"lord-of-mysteries",title:"Lord of Mysteries",image:"images/lord-of-mysteries.jpg",language:"Deutsch geschaut",watch_url:"https://aniworld.to/anime/stream/lord-of-mysteries",description:"Steampunk, Okkultismus und verbotene Geheimnisse.",trailer_url:"https://www.youtube.com/embed/6gS7lLpxr6E"},
+      {id:"mashle",title:"Mashle",image:"images/mashle.jpg",language:"Deutsch geschaut",watch_url:"https://aniworld.to/anime/stream/mashle",description:"Keine Magie? Kein Problem – Mash kämpft mit Muskeln.",trailer_url:"https://www.youtube.com/embed/7rI1CV7t9s8"},
+      {id:"masamune-kun-revenge",title:"Masamune-kun's Revenge",image:"images/masamune.jpg",language:"Deutsch geschaut",watch_url:"https://aniworld.to/anime/stream/masamune-kuns-revenge",description:"Rache an der Jugendliebe – und doch kommen Gefühle dazwischen.",trailer_url:"https://www.youtube.com/embed/QnJG20bC9xU"},
+      {id:"mushoku-tensei",title:"Mushoku Tensei",image:"images/mushoku-tensei.jpg",language:"Deutsch geschaut",watch_url:"https://aniworld.to/anime/stream/mushoku-tensei-isekai-ittara-honki-dasu",description:"Ein Mann wird in einer Fantasywelt wiedergeboren und beginnt neu.",trailer_url:"https://www.youtube.com/embed/7aAaLwZGMEY"},
+      {id:"my-hero-academia",title:"My Hero Academia",image:"images/mha.jpg",language:"Deutsch geschaut",watch_url:"https://aniworld.to/anime/stream/my-hero-academia",description:"In einer Welt voller Quirks will Izuku ein echter Held werden.",trailer_url:"https://www.youtube.com/embed/MZL7a8LHgBM"},
+      {id:"naruto",title:"Naruto",image:"images/naruto.jpg",language:"Deutsch geschaut",watch_url:"https://aniworld.to/anime/stream/naruto",description:"Naruto will Hokage werden und sein Dorf beschützen.",trailer_url:"https://www.youtube.com/embed/-G9BqkgZXRA"},
+      {id:"naruto-shippuden",title:"Naruto Shippuden",image:"images/naruto-shippuden.jpg",language:"Deutsch geschaut",watch_url:"https://aniworld.to/anime/stream/naruto-shippuuden",description:"Naruto kehrt zurück und stellt sich mächtigen Feinden.",trailer_url:"https://www.youtube.com/embed/hKJwGaG2M54"},
+      {id:"one-punch-man",title:"One Punch Man",image:"images/opm.jpg",language:"Deutsch geschaut",watch_url:"https://aniworld.to/anime/stream/one-punch-man",description:"Saitama besiegt jeden Gegner mit einem Schlag – und langweilt sich.",trailer_url:"https://www.youtube.com/embed/2JAElThbKrI"},
+      {id:"sword-art-online",title:"Sword Art Online",image:"images/sao.jpg",language:"Deutsch geschaut",watch_url:"https://aniworld.to/anime/stream/sword-art-online",description:"Spieler werden in einer virtuellen Welt gefangen.",trailer_url:"https://www.youtube.com/embed/WZzx9aYWYpo"},
+      {id:"tokyo-ghoul",title:"Tokyo Ghoul",image:"images/tokyo-ghoul.jpg",language:"Deutsch geschaut",watch_url:"https://aniworld.to/anime/stream/tokyo-ghoul",description:"Ein Student verwandelt sich in einen Halb-Ghoul.",trailer_url:"https://www.youtube.com/embed/vGuQeQsoRgU"},
+      {id:"the-seven-deadly-sins",title:"The Seven Deadly Sins",image:"images/seven-deadly-sins.jpg",language:"Deutsch geschaut",watch_url:"https://aniworld.to/anime/stream/the-seven-deadly-sins",description:"Legendäre Ritter retten das Königreich vor Dämonen und Intrigen.",trailer_url:"https://www.youtube.com/embed/wxcvbL6o55M"}
+    ];
 
+    const list   = document.getElementById('list');
+    const empty  = document.getElementById('empty');
+    const q      = document.getElementById('q');
+    const lang   = document.getElementById('lang');
+    const sortEl = document.getElementById('sort');
+
+    function makeRow(item){
+      const row = document.createElement('div'); row.className='row';
+      const wrap = document.createElement('div'); wrap.className='card-row';
+      const thumb = document.createElement('div'); thumb.className='thumb';
+      if(item.image){
+        const img = document.createElement('img');
+        img.src = item.image;
+        img.alt = item.title;
+        img.onerror = ()=>{ thumb.innerHTML='Bild folgt'; };
+        thumb.appendChild(img);
+      } else {
+        thumb.textContent = 'Bild folgt';
+      }
+      const info = document.createElement('div'); info.className='info';
+      const title = document.createElement('h3'); title.className='title';
+      const btn = document.createElement('button'); btn.textContent = item.title; title.appendChild(btn);
+      const badge = document.createElement('span'); badge.className='badge'; badge.textContent = item.language || 'Sprache fehlt';
+      const details = document.createElement('div'); details.className='details';
+      const desc = item.description ? `<p class="desc">${item.description}</p>` : '';
+      const yt = item.trailer_url ? `<iframe src="${item.trailer_url}" allowfullscreen></iframe>` : '';
+      const link = item.watch_url ? `<p><a class="btn" href="${item.watch_url}" target="_blank">▶ Auf AniWorld ansehen</a></p>` : '';
+      details.innerHTML = desc + yt + link;
+
+      btn.addEventListener('click',()=>{
+        const open = details.style.display==='block';
+        document.querySelectorAll('.details').forEach(d=>d.style.display='none');
+        details.style.display = open ? 'none' : 'block';
+      });
+
+      info.appendChild(title);
+      info.appendChild(badge);
+      info.appendChild(details);
+      wrap.appendChild(thumb);
+      wrap.appendChild(info);
+      row.appendChild(wrap);
+      return row;
+    }
+
+    function render(arr){
+      list.innerHTML = '';
+      arr.forEach(item=> list.appendChild(makeRow(item)));
+      empty.style.display = arr.length ? 'none' : 'block';
+    }
+
+    function applyFilters(){
+      const term = q.value.trim().toLowerCase();
+      const l = lang.value;
+      const s = sortEl.value;
+      let cur = DATA.filter(x => x.title.toLowerCase().includes(term));
+      if(l) cur = cur.filter(x => (x.language||'')===l);
+      cur.sort((a,b)=> s==='title-asc' ? a.title.localeCompare(b.title) : b.title.localeCompare(a.title));
+      render(cur);
+    }
+
+    q.addEventListener('input', applyFilters);
+    lang.addEventListener('change', applyFilters);
+    sortEl.addEventListener('change', applyFilters);
+    applyFilters();
+  </script>
 </body>
 </html>
