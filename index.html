@@ -94,7 +94,9 @@
   function rowTemplate(item) {
   const title = item.title;
   const rating = ratings[title] || 0;
-  const starsHtml = '★'.repeat(5).split('').map((s,i)=>
+  const starsHtml = Array.from({length:5}, (_,i)=>
+  `<span data-value="${i+1}" class="${i < rating ? 'active' : ''}">★</span>`
+).join('');
     `<span class="${i < rating ? 'active':''}" data-value="${i+1}">★</span>`).join('');
 
   return `
