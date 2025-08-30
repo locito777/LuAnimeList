@@ -1,40 +1,141 @@
-<!doctype html>
+<<!DOCTYPE html>
 <html lang="de">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Anime Watchlist</title>
-  <link rel="stylesheet" href="styles/style.css">
-  <meta name="description" content="Deine persönliche Anime-Übersicht: Titel anklicken für Beschreibung, Sprache und Streaming-Link.">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Meine Anime Watchlist</title>
+  <style>
+    :root {
+      --bg:#0f172a;      /* Seitenhintergrund */
+      --card:#1e293b;    /* Karten-Hintergrund */
+      --fg:#f1f5f9;      /* Textfarbe */
+      --muted:#94a3b8;   /* Untertitel */
+      --accent:#22c55e;  /* Buttons, Links */
+      --danger:#ef4444;  /* Warnungen */
+      --border:#334155;  /* Rahmen */
+    }
+
+    body {
+      margin: 0;
+      font-family: system-ui, sans-serif;
+      background: var(--bg);
+      color: var(--fg);
+      line-height: 1.5;
+    }
+
+    header {
+      text-align: center;
+      padding: 20px;
+      background: var(--card);
+      border-bottom: 1px solid var(--border);
+    }
+
+    h1 {
+      margin: 0;
+    }
+
+    .card {
+      max-width: 800px;
+      margin: 20px auto;
+      padding: 16px;
+      background: var(--card);
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+    }
+
+    .anime-item {
+      padding: 14px;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      margin-bottom: 12px;
+      transition: transform 0.2s, background 0.2s;
+    }
+
+    .anime-item:hover {
+      transform: translateY(-2px);
+      background: #243045;
+    }
+
+    .anime-item h3 {
+      margin: 0 0 8px 0;
+    }
+
+    .badge {
+      display: inline-block;
+      font-size: 12px;
+      padding: 4px 8px;
+      border-radius: 6px;
+      background: var(--muted);
+      color: var(--bg);
+      margin-bottom: 8px;
+    }
+
+    .desc {
+      font-size: 14px;
+      margin-bottom: 8px;
+      color: var(--fg);
+    }
+
+    iframe {
+      width: 100%;
+      height: 200px;
+      border-radius: 8px;
+      margin-bottom: 8px;
+    }
+
+    a {
+      display: inline-block;
+      margin-top: 6px;
+      text-decoration: none;
+      color: white;
+      background: var(--accent);
+      padding: 6px 12px;
+      border-radius: 6px;
+    }
+
+    a:hover {
+      background: #16a34a;
+    }
+
+    footer {
+      text-align: center;
+      padding: 20px;
+      font-size: 13px;
+      color: var(--muted);
+    }
+  </style>
 </head>
-:root{
-    --bg:#0f172a;
-    --card:#1e293b;
-    --fg:#f1f5f9;
-    --muted:#94a3b8;
-    --accent:#22c55e;
-    --danger:#ef4444;
-    --border:#334155;
-}
-    <div class="card">
-      <div class="controls">
-        <input id="search" type="search" placeholder="Suche nach Titel …" aria-label="Suche">
-        <select id="languageFilter" aria-label="Filter nach Sprache">
-          <option value="">Alle Sprachen</option>
-        </select>
-        <select id="sort" aria-label="Sortierung">
-          <option value="title-asc">Titel A–Z</option>
-          <option value="title-desc">Titel Z–A</option>
-        </select>
-      </div>
-      <div id="list" class="list" aria-live="polite"></div>
-      <div id="emptyState" class="alert" style="display:none;">Keine Treffer. Passe Suche oder Filter an.</div>
+<body>
+
+  <header>
+    <h1>📺 Meine geschauten Anime</h1>
+  </header>
+
+  <main class="card">
+
+    <!-- Beispiel Anime -->
+    <div class="anime-item">
+      <span class="badge">Deutsch geschaut</span>
+      <h3>Assassination Classroom</h3>
+      <p class="desc">Ein geheimnisvoller Lehrer mit übermenschlichen Kräften unterrichtet eine Klasse – und die Schüler sollen ihn töten, bevor er die Erde zerstört.</p>
+      <iframe src="https://www.youtube.com/embed/mz-K2bZ2n6M" frameborder="0" allowfullscreen></iframe>
+      <a href="https://aniworld.to/anime/stream/assassination-classroom" target="_blank">🔗 Hier ansehen</a>
     </div>
 
-    <div class="footer">
-      Tipp: Öffne einen Titel in einem neuen Tab mit <kbd>Strg</kbd> + <kbd>Klick</kbd> (Windows) oder <kbd>⌘</kbd> + <kbd>Klick</kbd> (Mac).
+    <div class="anime-item">
+      <span class="badge">Deutsch geschaut</span>
+      <h3>The Seven Deadly Sins</h3>
+      <p class="desc">Eine Gruppe von legendären Rittern kämpft gegen Dämonen und rettet das Königreich.</p>
+      <iframe src="https://www.youtube.com/embed/wxcvbL6o55M" frameborder="0" allowfullscreen></iframe>
+      <a href="https://aniworld.to/anime/stream/the-seven-deadly-sins" target="_blank">🔗 Hier ansehen</a>
     </div>
-  </div>
-  <script src="scripts/main.js" defer></script>
+
+  </main>
+
+  <footer>
+    © 2025 Meine Anime Watchlist
+  </footer>
+
 </body>
 </html>
