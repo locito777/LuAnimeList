@@ -1,38 +1,70 @@
 <!DOCTYPE html>
 <html lang="de">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>LuAnimeSide</title>
   <style>
     body { font-family: Arial, sans-serif; background:#111; color:#fff; margin:0; padding:20px; }
     h1 { text-align:center; font-size:40px; margin-bottom:20px; }
+
     .grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(300px,1fr)); gap:16px; }
     .card { background:#1c1c1c; border-radius:12px; padding:12px; display:flex; gap:10px; }
     .thumb { width:80px; height:80px; background:#2b2b2b; border-radius:10px; display:flex; align-items:center; justify-content:center; font-size:12px; color:#aaa; }
     .meta { flex:1; }
     .meta h3 { margin:0; font-size:18px; cursor:pointer; color:#62a0ff; }
-    .badges { font-size:12px; color:#bbb; margin-bottom:5px; }
-    .stars span { font-size:20px; cursor:pointer; color:#555; }
-    .stars span.active { color:gold; }
-    .crown { font-size:20px; cursor:pointer; margin-left:8px; color:gray; }
+    .badges { font-size:12px; color:#bbb; margin:4px 0 6px; }
+
+    /* Sterne */
+    .stars { user-select:none; }
+    .stars button {
+      background:none; border:none; padding:0 2px;
+      font-size:20px; cursor:pointer; color:#555;
+    }
+    .stars button.filled { color:gold; }
+    .stars button:disabled { cursor:default; }
+
+    /* Krone */
+    .crown-wrap { display:inline-flex; align-items:center; gap:8px; margin-top:6px; }
+    .crown {
+      font-size:20px; cursor:pointer; color:gray; line-height:1;
+      background:none; border:none; padding:0;
+    }
     .crown.active { color:gold; }
+    .hint { font-size:12px; color:#aaa; }
+
+    /* In-Card Bestätigung */
     .confirm-box { margin-top:6px; font-size:13px; }
-    .confirm-box button { margin-left:5px; padding:2px 6px; font-size:12px; }
+    .confirm-box .mini { margin-left:6px; padding:2px 8px; font-size:12px; border:none; border-radius:6px; cursor:pointer; }
+    .mini.ok { background:#2e7d32; color:#fff; }
+    .mini.no { background:#555; color:#fff; }
+
+    /* Detailseite */
     #detail { display:none; max-width:800px; margin:0 auto; }
     #detail iframe { width:100%; aspect-ratio:16/9; border:none; border-radius:8px; }
     .actions { margin-top:12px; display:flex; gap:10px; flex-wrap:wrap; }
-    .btn { padding:8px 14px; border:none; border-radius:8px; color:#fff; font-size:14px; cursor:pointer; }
+    .btn { padding:8px 14px; border:none; border-radius:8px; color:#fff; font-size:14px; cursor:pointer; text-decoration:none; display:inline-block; }
     .netflix { background:#e50914; }
     .crunchyroll { background:#f47521; }
     .aniworld { background:#7c4dff; }
     .back { background:#444; margin-top:16px; }
-    .confetti { position:fixed; top:0; font-size:24px; animation:fall 2s linear forwards; }
-    @keyframes fall { to { transform:translateY(100vh) rotate(720deg); opacity:0; } }
-    /* AniWorld Popup */
-    #popup { display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.7); align-items:center; justify-content:center; }
-    #popup .box { background:#1c1c1c; padding:20px; border-radius:10px; max-width:400px; text-align:center; }
-    #popup button { margin-top:10px; padding:6px 12px; background:#7c4dff; border:none; border-radius:6px; color:#fff; cursor:pointer; }
+
+    /* AniWorld Popup (schön) */
+    #popup { display:none; position:fixed; inset:0; background:rgba(0,0,0,0.7); align-items:center; justify-content:center; z-index:9999; }
+    #popup .box { background:#1c1c1c; padding:20px; border-radius:10px; max-width:420px; text-align:center; border:1px solid rgba(255,255,255,.08); }
+    #popup .box p { margin:0 0 12px; }
+    #popup .box button { padding:8px 14px; border:none; border-radius:8px; background:#7c4dff; color:#fff; cursor:pointer; }
+
+    /* Konfetti Partikel */
+    .confetti-piece {
+      position:fixed; width:8px; height:14px; opacity:1; transform:translate(-50%,-50%);
+      border-radius:2px; pointer-events:none;
+      animation:fall 2s ease-in forwards;
+    }
+    @keyframes fall {
+      0% { opacity:1; transform:translate(var(--x-start), var(--y-start)) rotate(0deg); }
+      100% { opacity:0; transform:translate(var(--x-end), var(--y-end)) rotate(720deg); }
+    }
   </style>
 </head>
 <body>
@@ -47,6 +79,7 @@
     <button class="btn back" onclick="closeDetail()">Zurück</button>
   </div>
 
+  <!-- AniWorld Overlay -->
   <div id="popup">
     <div class="box">
       <p>⚠️ Aus rechtlichen Gründen kein direkter Link zu AniWorld.<br>Bitte öffne AniWorld selbst und suche den Titel dort.</p>
@@ -55,10 +88,12 @@
   </div>
 
   <script>
+    /* ====== Daten ====== */
     const ANIME = [
       { title:"The Seven Deadly Sins", status:"watched", trailer:"https://www.youtube.com/embed/_erEYpW3L0E", links:{ aniworld:true } },
       { title:"The Seven Deadly Sins: Dragon’s Judgement", status:"watched", trailer:"https://www.youtube.com/embed/0kgL6OKT5nw", links:{ netflix:"https://www.netflix.com/de/title/80050063" } },
       { title:"The Seven Deadly Sins: Four Knights of the Apocalypse", status:"watched", trailer:"https://www.youtube.com/embed/kKRP8ATyq3k", links:{ netflix:"https://www.netflix.com/de/title/81562396" } },
+
       { title:"Chainsaw Man", status:"watched", trailer:"https://www.youtube.com/embed/dFlDRhvM4L0", links:{ aniworld:true } },
       { title:"Solo Leveling", status:"watched", trailer:"https://www.youtube.com/embed/x40O_l6Nk3U", links:{ aniworld:true, crunchyroll:"https://crunchyroll.com/series/GDKHZEJ0K/solo-leveling" } },
       { title:"My Hero Academia", status:"watched", trailer:"https://www.youtube.com/embed/EPVkcwyLQQ8", links:{ crunchyroll:"https://crunchyroll.com/series/G6NQ5DWZ6/my-hero-academia", aniworld:true } },
@@ -90,58 +125,210 @@
       { title:"Anohana", status:"watched", trailer:"https://www.youtube.com/embed/rMJFIkNlwcs", links:{ aniworld:true } }
     ];
 
-    const grid=document.getElementById("grid");
-    const detail=document.getElementById("detail");
-    const main=document.getElementById("main");
-    const detailTitle=document.getElementById("detailTitle");
-    const detailTrailer=document.getElementById("detailTrailer");
-    const detailLinks=document.getElementById("detailLinks");
+    /* ====== DOM ====== */
+    const grid = document.getElementById("grid");
+    const detail = document.getElementById("detail");
+    const main = document.getElementById("main");
+    const detailTitle = document.getElementById("detailTitle");
+    const detailTrailer = document.getElementById("detailTrailer");
+    const detailLinks = document.getElementById("detailLinks");
+    const popup = document.getElementById("popup");
 
+    /* ====== Render Hauptseite ====== */
     function render(){
-      grid.innerHTML="";
-      ANIME.forEach(a=>{
-        const card=document.createElement("div");
-        card.className="card";
-        const thumb=document.createElement("div"); thumb.className="thumb"; thumb.textContent="Bild";
-        const meta=document.createElement("div"); meta.className="meta";
-        const h3=document.createElement("h3"); h3.textContent=a.title; h3.onclick=()=>openDetail(a);
-        const badges=document.createElement("div"); badges.className="badges"; badges.textContent=a.status==="unfinished"?"Noch nicht fertig":"Gesehen";
+      grid.innerHTML = "";
+      ANIME.forEach((a)=>{
+        const card = document.createElement("div");
+        card.className = "card";
 
-        const stars=document.createElement("div"); stars.className="stars";
-        for(let s=1;s<=5;s++){ const span=document.createElement("span"); span.textContent="★";
-          span.onclick=()=>showConfirm(stars,s,(ok)=>{ if(ok){ for(const ch of stars.children) ch.classList.remove("active"); for(let j=0;j<s;j++) stars.children[j].classList.add("active"); } });
-          stars.appendChild(span);
+        const thumb = document.createElement("div");
+        thumb.className = "thumb";
+        thumb.textContent = "Bild";
+
+        const meta = document.createElement("div");
+        meta.className = "meta";
+
+        const h3 = document.createElement("h3");
+        h3.textContent = a.title;
+        h3.onclick = () => openDetail(a);
+
+        const badges = document.createElement("div");
+        badges.className = "badges";
+        badges.textContent = a.status === "unfinished" ? "Noch nicht fertig" : "Gesehen";
+
+        // ⭐ Sterne (mit Lock nach Bestätigung)
+        const stars = document.createElement("div");
+        stars.className = "stars";
+        stars.dataset.locked = "false";
+        let previewCount = 0;
+
+        for (let s=1; s<=5; s++){
+          const b = document.createElement("button");
+          b.type = "button";
+          b.textContent = "★";
+          b.addEventListener("click", () => {
+            if (stars.dataset.locked === "true") return; // bereits dauerhaft gespeichert
+            previewCount = s;
+            paintStars(stars, previewCount);
+            showConfirm(stars, `${s} Sterne geben?`, (ok)=>{
+              if(ok){
+                stars.dataset.locked = "true";
+                paintStars(stars, s);
+                // disable buttons endgültig
+                stars.querySelectorAll("button").forEach(btn => btn.disabled = true);
+              } else {
+                paintStars(stars, 0);
+              }
+            });
+          });
+          stars.appendChild(b);
         }
 
-        const crown=document.createElement("span"); crown.className="crown"; crown.textContent="👑";
-        crown.onclick=()=>showConfirm(crown,null,(ok)=>{ if(ok){ crown.classList.add("active"); confetti(); } },"Als Favorit markieren?");
+        // 👑 Krone (mit Bestätigung + Konfetti aus dem Mittelpunkt der Krone)
+        const crownWrap = document.createElement("div");
+        crownWrap.className = "crown-wrap";
+        const crown = document.createElement("button");
+        crown.className = "crown";
+        crown.type = "button";
+        crown.textContent = "👑";
+        crown.dataset.locked = "false";
+        const crownHint = document.createElement("span");
+        crownHint.className = "hint";
+        crownHint.textContent = ""; // optionaler Textplatz
 
-        meta.appendChild(h3); meta.appendChild(badges); meta.appendChild(stars); meta.appendChild(crown);
-        card.appendChild(thumb); card.appendChild(meta); grid.appendChild(card);
+        crown.addEventListener("click", (e) => {
+          if (crown.dataset.locked === "true") return;
+          showConfirm(crownWrap, "Als Favorit markieren?", (ok)=>{
+            if(ok){
+              crown.dataset.locked = "true";
+              crown.classList.add("active");
+              launchCrownConfetti(crown);
+            }
+          });
+        });
+
+        crownWrap.appendChild(crown);
+        crownWrap.appendChild(crownHint);
+
+        meta.appendChild(h3);
+        meta.appendChild(badges);
+        meta.appendChild(stars);
+        meta.appendChild(crownWrap);
+
+        card.appendChild(thumb);
+        card.appendChild(meta);
+        grid.appendChild(card);
       });
     }
 
-    function showConfirm(el,rating,callback,text){
-      let box=document.createElement("div"); box.className="confirm-box"; box.textContent=text || (rating+" Sterne geben?");
-      const yes=document.createElement("button"); yes.textContent="Ja"; yes.onclick=()=>{callback(true); box.remove();};
-      const no=document.createElement("button"); no.textContent="Nein"; no.onclick=()=>box.remove();
-      box.appendChild(yes); box.appendChild(no); el.parentNode.insertBefore(box, el.nextSibling);
+    function paintStars(starsEl, count){
+      const btns = starsEl.querySelectorAll("button");
+      btns.forEach((b, i) => {
+        b.classList.toggle("filled", i < count);
+      });
     }
 
-    function confetti(){ for(let i=0;i<20;i++){ const c=document.createElement("div"); c.className="confetti"; c.textContent="🎉"; c.style.left=Math.random()*100+"vw"; document.body.appendChild(c); setTimeout(()=>c.remove(),2000); } }
+    /* ====== In-Card Bestätigungsbox ====== */
+    function showConfirm(anchorEl, text, onResult){
+      // Nur eine Box gleichzeitig direkt unter anchorEl
+      const existing = anchorEl.parentNode.querySelector(".confirm-box");
+      if (existing) existing.remove();
 
+      const box = document.createElement("div");
+      box.className = "confirm-box";
+      box.innerHTML = `<span>${text}</span>`;
+      const yes = document.createElement("button");
+      yes.className = "mini ok";
+      yes.textContent = "Ja";
+      const no = document.createElement("button");
+      no.className = "mini no";
+      no.textContent = "Nein";
+      yes.onclick = () => { onResult(true); box.remove(); };
+      no.onclick = () => { onResult(false); box.remove(); };
+      box.appendChild(yes);
+      box.appendChild(no);
+      anchorEl.parentNode.insertBefore(box, anchorEl.nextSibling);
+    }
+
+    /* ====== Konfetti aus der Krone (2s, bunt) ====== */
+    function launchCrownConfetti(crownBtn){
+      const rect = crownBtn.getBoundingClientRect();
+      const cx = rect.left + rect.width/2;
+      const cy = rect.top  + rect.height/2;
+
+      const colors = ["#ff3b30","#ffcc00","#34c759","#0a84ff","#ff2d55","#ffd60a","#64d2ff","#bf5af2"];
+      const pieces = 28; // Anzahl Partikel
+      for (let i=0;i<pieces;i++){
+        const p = document.createElement("div");
+        p.className = "confetti-piece";
+        const color = colors[i % colors.length];
+        p.style.background = color;
+
+        // Startposition (fixiert am Mittelpunkt der Krone)
+        p.style.setProperty("--x-start", cx + "px");
+        p.style.setProperty("--y-start", cy + "px");
+
+        // Zufällige seitliche Streuung, fällt ~80–100vh nach unten
+        const spreadX = (Math.random()*160 - 80); // -80..+80 px seitlich
+        const endX = cx + spreadX + "px";
+        const endY = (window.innerHeight + 100) + "px"; // unter Bildschirm
+        p.style.setProperty("--x-end", endX);
+        p.style.setProperty("--y-end", endY);
+
+        // Kleine Zufallsverzögerung und Größe
+        p.style.width = (6 + Math.random()*6) + "px";
+        p.style.height = (10 + Math.random()*10) + "px";
+        p.style.animationDelay = (Math.random()*0.15) + "s";
+
+        document.body.appendChild(p);
+        setTimeout(()=>p.remove(), 2100); // etwas länger als 2s Animation
+      }
+    }
+
+    /* ====== Detailseite ====== */
     function openDetail(a){
-      main.style.display="none"; detail.style.display="block"; detailTitle.textContent=a.title; detailTrailer.src=a.trailer; detailLinks.innerHTML="";
-      if(a.links.netflix){ const b=document.createElement("a"); b.textContent="Netflix"; b.href=a.links.netflix; b.target="_blank"; b.className="btn netflix"; detailLinks.appendChild(b); }
-      if(a.links.crunchyroll){ const b=document.createElement("a"); b.textContent="Crunchyroll"; b.href=a.links.crunchyroll; b.target="_blank"; b.className="btn crunchyroll"; detailLinks.appendChild(b); }
-      if(a.links.aniworld){ const b=document.createElement("button"); b.textContent="AniWorld (!)"; b.className="btn aniworld"; b.onclick=()=>openPopup(); detailLinks.appendChild(b); }
+      main.style.display="none";
+      detail.style.display="block";
+      detailTitle.textContent = a.title;
+      detailTrailer.src = a.trailer; // eingebettet, kein YouTube-Link
+
+      detailLinks.innerHTML = "";
+      if (a.links.netflix){
+        const b = document.createElement("a");
+        b.textContent = "Netflix";
+        b.href = a.links.netflix;
+        b.target = "_blank";
+        b.className = "btn netflix";
+        detailLinks.appendChild(b);
+      }
+      if (a.links.crunchyroll){
+        const b = document.createElement("a");
+        b.textContent = "Crunchyroll";
+        b.href = a.links.crunchyroll;
+        b.target = "_blank";
+        b.className = "btn crunchyroll";
+        detailLinks.appendChild(b);
+      }
+      if (a.links.aniworld){
+        const b = document.createElement("button");
+        b.textContent = "AniWorld (!)";
+        b.className = "btn aniworld";
+        b.onclick = openPopup; // schönes Overlay
+        detailLinks.appendChild(b);
+      }
     }
 
-    function closeDetail(){ detail.style.display="none"; main.style.display="block"; detailTrailer.src=""; }
+    function closeDetail(){
+      detail.style.display="none";
+      main.style.display="block";
+      detailTrailer.src = "";
+    }
 
-    function openPopup(){ document.getElementById("popup").style.display="flex"; }
-    function closePopup(){ document.getElementById("popup").style.display="none"; }
+    /* ====== AniWorld Popup ====== */
+    function openPopup(){ popup.style.display="flex"; }
+    function closePopup(){ popup.style.display="none"; }
 
+    /* Start */
     render();
   </script>
 </body>
