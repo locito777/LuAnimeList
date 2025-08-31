@@ -491,16 +491,30 @@ function makeRow(item){
   const row = document.createElement('div'); row.className='row';
   const wrap = document.createElement('div'); wrap.className='card-row';
 
-  // Bild / Platzhalter
-  const thumb = document.createElement('div'); thumb.className='thumb';
-  if(item.image){
-    const img = document.createElement('img');
-    img.src = item.image; img.alt = item.title;
-    img.onerror = ()=>{ thumb.textContent='Bild folgt'; };
-    thumb.appendChild(img);
-  } else {
+// Bild / Platzhalter
+const thumb = document.createElement('div');
+thumb.className = 'thumb';
+
+if (item.image && item.image.trim() !== '') {
+  const img = new Image();               // <img> sauber erstellen
+  img.alt = item.title;
+
+  img.onload = () => {
+    // wenn geladen -> Platzhalter-Text ausblenden
+    thumb.classList.add('has-img');
+  };
+
+  img.onerror = () => {
+    // falls Pfad falsch o.ä.
     thumb.textContent = 'Bild folgt';
-  }
+  };
+
+  thumb.textContent = '';                // evtl. Text entfernen
+  img.src = item.image;                  // WICHTIG: zuletzt setzen
+  thumb.appendChild(img);
+} else {
+  thumb.textContent = 'Bild folgt';
+}
 
   // Infos
   const info = document.createElement('div'); info.className='info';
