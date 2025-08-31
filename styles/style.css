@@ -123,3 +123,11 @@ kbd {
   margin-top: 8px;
 }
 .links .button { white-space: nowrap; }
+/* ==================== Anime-Bilder ==================== */
+.thumb img {
+  width: 100%;
+  height: auto;
+  border-radius: 8px;
+  object-fit: cover;
+  display: block;
+}
