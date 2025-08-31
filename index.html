@@ -3,77 +3,246 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>LuAnimeList</title>
+  <title>LuAnimeSide</title>
   <style>
     body {
       font-family: Arial, sans-serif;
       background: #111;
       color: #fff;
+      margin: 0;
       padding: 20px;
     }
     h1 {
-      font-size: 28px;
+      text-align: center;
+      font-size: 40px;
       margin-bottom: 20px;
     }
-    ul {
-      list-style: none;
-      padding: 0;
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 16px;
     }
-    li {
-      background: #222;
-      margin: 5px 0;
-      padding: 10px;
-      border-radius: 6px;
+    .card {
+      background: #1c1c1c;
+      border-radius: 12px;
+      padding: 12px;
+      display: flex;
+      gap: 10px;
     }
+    .thumb {
+      width: 80px;
+      height: 80px;
+      background: #2b2b2b;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+      color: #aaa;
+    }
+    .meta {
+      flex: 1;
+    }
+    .meta h3 {
+      margin: 0;
+      font-size: 18px;
+      cursor: pointer;
+      color: #62a0ff;
+    }
+    .badges { font-size: 12px; color: #bbb; }
+    .stars span {
+      font-size: 20px;
+      cursor: pointer;
+      color: #555;
+    }
+    .stars span.active { color: gold; }
+    .crown {
+      font-size: 20px;
+      cursor: pointer;
+      margin-left: 8px;
+      color: gray;
+    }
+    .crown.active { color: gold; }
+    /* Detailseite */
+    #detail {
+      display: none;
+      max-width: 800px;
+      margin: 0 auto;
+    }
+    #detail iframe {
+      width: 100%;
+      aspect-ratio: 16/9;
+      border: none;
+      border-radius: 8px;
+    }
+    .actions { margin-top: 12px; display: flex; gap: 10px; }
+    .btn {
+      padding: 8px 14px;
+      border: none;
+      border-radius: 8px;
+      color: #fff;
+      font-size: 14px;
+      cursor: pointer;
+    }
+    .netflix { background: #e50914; }
+    .crunchyroll { background: #f47521; }
+    .aniworld { background: #7c4dff; }
+    .back { background: #444; margin-top: 16px; }
   </style>
 </head>
 <body>
-  <h1>Meine Anime Liste</h1>
-  <ul id="LuAnimeList"></ul>
+  <h1>LuAnimeSide</h1>
+
+  <div id="main">
+    <div class="grid" id="grid"></div>
+  </div>
+
+  <div id="detail">
+    <h2 id="detailTitle"></h2>
+    <iframe id="detailTrailer" allowfullscreen></iframe>
+    <div class="actions" id="detailLinks"></div>
+    <button class="btn back" onclick="closeDetail()">Zurück</button>
+  </div>
 
   <script>
-    const WATCHED = [
-      "Anohana: The Flower We Saw That Day (Ano Hi Mita Hana no Namae wo Bokutachi wa Mada Shiranai)",
-      "Assassination Classroom",
-      "Attack on Titan (Shingeki no Kyojin)",
-      "Chainsaw Man",
-      "Charlotte",
-      "Dan Da Dan",
-      "Demon Slayer",
-      "Dr. STONE",
-      "Elfen Lied",
-      "Failure Frame: I Became the Strongest and Annihilated Everything With Low-Level Spells",
-      "Gachiakuta",
-      "Hell's Paradise",
-      "Higurashi",
-      "Junji Ito Collection",
-      "Lookism",
-      "Lord of Mysteries",
-      "Masamune-kun's Revenge",
-      "Mashle",
-      "Mushoku Tensei",
-      "My Hero Academia",
-      "Naruto",
-      "Naruto Shippuden",
-      "One Punch Man",
-      "Reborn as a Vending Machine, I Now Wander the Dungeon",
-      "Solo Leveling",
-      "Sword Art Online",
-      "The Seven Deadly Sins",
-      "The Seven Deadly Sins: Dragon's Judgement",
-      "The Seven Deadly Sins: Four Knights of the Apocalypse",
-      "Tokyo Ghoul",
-      "Tokyo Revengers",
-      "Wind Breaker",
-      "You Are My Eternity (Fumetsu no Anata e)"
+    const ANIME = [
+      { title:"The Seven Deadly Sins", status:"watched", trailer:"https://www.youtube.com/embed/_erEYpW3L0E", links:{ aniworld:true } },
+      { title:"The Seven Deadly Sins: Dragon's Judgement", status:"watched", trailer:"https://www.youtube.com/embed/0kgL6OKT5nw", links:{ netflix:"https://www.netflix.com/de/title/80050063?s=i&trkid=254567369&vlang=de&trg=cp" } },
+      { title:"The Seven Deadly Sins: Four Knights of the Apocalypse", status:"watched", trailer:"https://www.youtube.com/embed/kKRP8ATyq3k", links:{ netflix:"https://www.netflix.com/de/title/81562396?s=i&trkid=258593161&vlang=de&trg=cp" } },
+      { title:"Chainsaw Man", status:"watched", trailer:"https://www.youtube.com/embed/dFlDRhvM4L0", links:{ aniworld:true } },
+      { title:"Solo Leveling", status:"watched", trailer:"https://www.youtube.com/embed/x40O_l6Nk3U", links:{ aniworld:true, crunchyroll:"https://crunchyroll.com/series/GDKHZEJ0K/solo-leveling" } },
+      { title:"My Hero Academia", status:"watched", trailer:"https://www.youtube.com/embed/EPVkcwyLQQ8", links:{ crunchyroll:"https://crunchyroll.com/series/G6NQ5DWZ6/my-hero-academia", aniworld:true } },
+      { title:"Naruto Shippuden", status:"unfinished", trailer:"https://www.youtube.com/embed/dXOhwl2ylh0", links:{ netflix:"https://www.netflix.com/de/title/80000603?s=i&trkid=254643526", aniworld:true } },
+      { title:"Tokyo Ghoul", status:"unfinished", trailer:"https://www.youtube.com/embed/BCP6n6bsPWw", links:{ crunchyroll:"https://crunchyroll.com/series/G6NV7Z50Y/tokyo-ghoul", aniworld:true } },
+      { title:"Attack on Titan", status:"watched", trailer:"https://www.youtube.com/embed/MGRm4IzK1SQ", links:{ aniworld:true } },
+      { title:"Elfen Lied", status:"watched", trailer:"https://www.youtube.com/embed/x8xj7KkY9e8", links:{ aniworld:true } },
+      { title:"Failure Frame", status:"watched", trailer:"https://www.youtube.com/embed/n8sGEKDPFeE", links:{ crunchyroll:"https://crunchyroll.com/series/G3KHEVD3E/failure-frame" } },
+      { title:"You Are My Eternity", status:"watched", trailer:"https://www.youtube.com/embed/cx0Of4zVWF4", links:{ crunchyroll:"https://crunchyroll.com/series/GG5H5XMWV/to-your-eternity" } },
+      { title:"Sword Art Online", status:"watched", trailer:"https://www.youtube.com/embed/W8pLC4hNHZg", links:{ crunchyroll:"https://crunchyroll.com/series/GR49G9VP6/sword-art-online", aniworld:true } },
+      { title:"Higurashi", status:"watched", trailer:"https://www.youtube.com/embed/f2G7y0-KXwM", links:{ aniworld:true } },
+      { title:"Masamune-kun's Revenge", status:"watched", trailer:"https://www.youtube.com/embed/fnUjB_8N77I", links:{ crunchyroll:"https://crunchyroll.com/series/GYX02P3MR/masamune-kuns-revenge" } },
+      { title:"Reborn as a Vending Machine", status:"watched", trailer:"https://www.youtube.com/embed/RVyhFZF5ius", links:{ crunchyroll:"https://crunchyroll.com/series/GVDHX8504/reborn-as-a-vending-machine-i-now-wander-the-dungeon" } },
+      { title:"Demon Slayer", status:"watched", trailer:"https://www.youtube.com/embed/s2BNK1uy42g", links:{ crunchyroll:"https://crunchyroll.com/series/GY5P48XEY/demon-slayer" } },
+      { title:"Tokyo Revengers", status:"watched", trailer:"https://www.youtube.com/embed/fSHhNUmXMeA", links:{ crunchyroll:"https://crunchyroll.com/series/G3KHEVMN1/tokyo-revengers", aniworld:true } },
+      { title:"One Punch Man", status:"watched", trailer:"https://www.youtube.com/embed/Poo5lqoWSGw", links:{ aniworld:true } },
+      { title:"Hell's Paradise", status:"watched", trailer:"https://www.youtube.com/embed/l7HnUkyhbas", links:{ crunchyroll:"https://crunchyroll.com/series/GJ0H7Q5ZJ/hells-paradise", aniworld:true, netflix:"https://www.netflix.com/de/title/81574246" } },
+      { title:"Dan Da Dan", status:"watched", trailer:"https://www.youtube.com/embed/QoQOJn8pEDs", links:{ crunchyroll:"https://crunchyroll.com/series/GG5H5XQ0D/dan-da-dan", netflix:"https://www.netflix.com/de/title/81736884", aniworld:true } },
+      { title:"Dr. STONE", status:"watched", trailer:"https://www.youtube.com/embed/1dQmJ8S6bW8", links:{ crunchyroll:"https://crunchyroll.com/series/GYEXQKJG6/dr-stone" } },
+      { title:"Mashle", status:"watched", trailer:"https://www.youtube.com/embed/YoRF9ol8MdU", links:{ crunchyroll:"https://crunchyroll.com/series/GDKHZEP8W/mashle", aniworld:true } },
+      { title:"Junji Ito Collection", status:"watched", trailer:"https://www.youtube.com/embed/4OtHRdU5SPk", links:{ crunchyroll:"https://crunchyroll.com/series/G68V4NDJ6/junji-ito-collection", aniworld:true } },
+      { title:"Gachiakuta", status:"watched", trailer:"https://www.youtube.com/embed/tkKQBo5ONMU", links:{ crunchyroll:"https://crunchyroll.com/series/GP5HJ84P7/gachiakuta" } },
+      { title:"Charlotte", status:"watched", trailer:"https://www.youtube.com/embed/BdAAij3cTG4", links:{ aniworld:true } },
+      { title:"Mushoku Tensei", status:"watched", trailer:"https://www.youtube.com/embed/wwZVSjczA8I", links:{ crunchyroll:"https://crunchyroll.com/series/G24H1N3MP/mushoku-tensei", aniworld:true } },
+      { title:"Wind Breaker", status:"watched", trailer:"https://www.youtube.com/embed/Sdddy0LoTYI", links:{ crunchyroll:"https://crunchyroll.com/series/G3KHEVDPE/wind-breaker", aniworld:true } },
+      { title:"Assassination Classroom", status:"watched", trailer:"https://www.youtube.com/embed/dbrxgQGmZ2o", links:{ netflix:"https://www.netflix.com/de/title/80045948", aniworld:true } },
+      { title:"Lord of Mysteries", status:"watched", trailer:"https://www.youtube.com/embed/DaF8nEBqgnU", links:{ crunchyroll:"https://crunchyroll.com/series/GEXH3W2EZ/lord-of-mysteries", aniworld:true } },
+      { title:"Lookism", status:"watched", trailer:"https://www.youtube.com/embed/ln9Wv3w41q4", links:{ netflix:"https://www.netflix.com/de/title/81177634", aniworld:true } },
+      { title:"Anohana", status:"watched", trailer:"https://www.youtube.com/embed/rMJFIkNlwcs", links:{ aniworld:true } }
     ];
 
-    const listEl = document.getElementById("LuAnimeList");
-    WATCHED.forEach(title => {
-      const li = document.createElement("li");
-      li.textContent = title;
-      listEl.appendChild(li);
-    });
+    const grid = document.getElementById("grid");
+    const detail = document.getElementById("detail");
+    const main = document.getElementById("main");
+    const detailTitle = document.getElementById("detailTitle");
+    const detailTrailer = document.getElementById("detailTrailer");
+    const detailLinks = document.getElementById("detailLinks");
+
+    function render() {
+      grid.innerHTML = "";
+      ANIME.forEach((a,i)=>{
+        const card=document.createElement("div");
+        card.className="card";
+        const thumb=document.createElement("div");
+        thumb.className="thumb";
+        thumb.textContent="Bild";
+        const meta=document.createElement("div");
+        meta.className="meta";
+        const h3=document.createElement("h3");
+        h3.textContent=a.title;
+        h3.onclick=()=>openDetail(a);
+        const badges=document.createElement("div");
+        badges.className="badges";
+        badges.textContent=a.status==="unfinished"?"Noch nicht fertig":"Gesehen";
+        // Sterne
+        const stars=document.createElement("div");
+        stars.className="stars";
+        for(let s=1;s<=5;s++){
+          const span=document.createElement("span");
+          span.textContent="★";
+          span.onclick=()=>{
+            if(confirm(s+" Sterne vergeben?")){
+              for(const ch of stars.children) ch.classList.remove("active");
+              for(let j=0;j<s;j++) stars.children[j].classList.add("active");
+            }
+          };
+          stars.appendChild(span);
+        }
+        // Krone
+        const crown=document.createElement("span");
+        crown.className="crown";
+        crown.textContent="👑";
+        crown.onclick=()=>{
+          if(confirm("Als Favorit markieren?")){
+            crown.classList.add("active");
+            // Konfetti (simpel)
+            const conf=document.createElement("div");
+            conf.textContent="🎉";
+            conf.style.position="fixed";
+            conf.style.top="50%";
+            conf.style.left="50%";
+            conf.style.fontSize="50px";
+            document.body.appendChild(conf);
+            setTimeout(()=>conf.remove(),2000);
+          }
+        };
+        meta.appendChild(h3);
+        meta.appendChild(badges);
+        meta.appendChild(stars);
+        meta.appendChild(crown);
+        card.appendChild(thumb);
+        card.appendChild(meta);
+        grid.appendChild(card);
+      });
+    }
+
+    function openDetail(a){
+      main.style.display="none";
+      detail.style.display="block";
+      detailTitle.textContent=a.title;
+      detailTrailer.src=a.trailer;
+      detailLinks.innerHTML="";
+      if(a.links.netflix){
+        const b=document.createElement("a");
+        b.textContent="Netflix";
+        b.href=a.links.netflix;
+        b.target="_blank";
+        b.className="btn netflix";
+        detailLinks.appendChild(b);
+      }
+      if(a.links.crunchyroll){
+        const b=document.createElement("a");
+        b.textContent="Crunchyroll";
+        b.href=a.links.crunchyroll;
+        b.target="_blank";
+        b.className="btn crunchyroll";
+        detailLinks.appendChild(b);
+      }
+      if(a.links.aniworld){
+        const b=document.createElement("button");
+        b.textContent="AniWorld (!)";
+        b.className="btn aniworld";
+        b.onclick=()=>alert("Aus rechtlichen Gründen kein direkter Link. Bitte AniWorld selbst öffnen und suchen.");
+        detailLinks.appendChild(b);
+      }
+    }
+
+    function closeDetail(){
+      detail.style.display="none";
+      main.style.display="block";
+      detailTrailer.src="";
+    }
+
+    render();
   </script>
 </body>
 </html>
